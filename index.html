@@ -450,10 +450,6 @@ const units = [
             options:['If(Score >= 90, "A") If(Score >= 80, "B", "C")', 'If(Score >= 90, "A", If(Score >= 80, "B", "C"))', 'If(Score >= 90 OR Score >= 80, "A", "B", "C")', 'Switch(Score, 90, "A", 80, "B", "C")'],
             answer:1, feedback:'정답! 중첩 If는 If(조건1, 결과1, If(조건2, 결과2, 기본값)) 패턴을 사용해요. 조건은 높은 기준부터 체크해야 해요! 📊'
           },
-          { type:'mcq', prompt:'Status에 따라 이모지를 표시하는 더 깔끔한 방법은?\n"미등록"→🔴, "관리진행"→🟡, "완료"→🟢', sub:'Switch 함수 활용',
-            options:['If(Status = "미등록", "🔴", If(Status = "관리진행", "🟡", "🟢"))', 'Switch(thisRow.Status, "미등록","🔴","관리진행","🟡","완료","🟢")', '둘 다 가능하며 Switch가 더 읽기 쉽다', '위 보기 모두 불가'],
-            answer:2, feedback:'정답! 값이 딱 떨어지는 분류는 Switch()가 훨씬 깔끔해요. 둘 다 동작하지만 Switch를 쓰면 유지보수도 쉬워요 ✨'
-          },
           { type:'fillblank', prompt:'빈칸을 채워 Switch 수식을 완성하세요', sub:'Priority가 "긴급"이면 "🔴", "보통"이면 "🟡", 기본값은 "🟢"',
             sentence:'Switch(thisRow.Priority, "긴급", "🔴", "보통", ___, "🟢")', blanks:['"🟡"'],
             wordbank:['"🟡"','"🔵"','"🟠"','"⚫"'],

@@ -208,7 +208,7 @@ body {
 .unit-emoji { font-size: 40px; }
 .unit-header h2 {
   font-family: 'Nunito', sans-serif;
-  font-weight: 900;
+  font-weight: 900;ƒ
   font-size: 20px;
   color: var(--gray-900);
 }
@@ -980,22 +980,22 @@ const units = [
             title: 'Filter 함수 소개',
             subtitle: '조건에 맞는 행만 골라주는 마법 같은 함수예요!',
             boxes: [
-              { color: 'blue', title: '📌 어떤 상황에 쓰나요?', text: '"진행중"인 태스크만 보고 싶을 때, 특정 담당자의 업무만 볼 때, 이번 주 마감인 항목만 추릴 때!' },
-              { color: 'green', title: '✍️ 기본 문법', text: 'Tasks.Filter(조건)\n예시: Tasks.Filter(Status = "진행중")' },
+              { color: 'blue', title: '📌 어떤 상황에 쓰나요?', text: '"관리진행"인 학생만 보고 싶을 때, 특정 팀원의 DB만 볼 때, 이번 주 도래인 DB만 추릴 때!' },
+              { color: 'green', title: '✍️ 기본 문법', text: 'DB.Filter(조건)\n예시: Tasks.Filter(Status = "관리진행")' },
             ]
           },
           {
             type: 'mcq',
-            prompt: 'Tasks 테이블에서 "완료"된 항목만 보려면?',
+            prompt: '학생명단 테이블에서 "관리진행"인 DB만 보려면?',
             sub: '올바른 Filter 수식을 고르세요',
             options: [
-              'Tasks.Select(Status = "완료")',
-              'Tasks.Filter(Status = "완료")',
-              'Filter.Tasks("완료")',
-              'Tasks.Show("완료")'
+              '학생명단.Select(Status = "관리진행")',
+              '학생명단.Filter(Status = "관리진행")',
+              '학생명단.Tasks("관리진행")',
+              '학생명단.Show("관리진행")'
             ],
             answer: 1,
-            feedback: '정답! Tasks.Filter(조건) 형식을 사용해요. 조건 안에 찾고 싶은 기준을 쓰면 돼요 😊'
+            feedback: '정답! 학생명단.Filter(조건) 형식을 사용해요. 조건 안에 찾고 싶은 기준을 쓰면 돼요 😊'
           },
           {
             type: 'mcq',
@@ -1020,10 +1020,10 @@ const units = [
             type: 'explain',
             emoji: '🔗',
             title: '두 가지 조건 동시에!',
-            subtitle: 'AND(&&)를 쓰면 여러 조건을 함께 적용할 수 있어요',
+            subtitle: 'AND를 쓰면 여러 조건을 함께 적용할 수 있어요',
             boxes: [
-              { color: 'green', title: '✍️ AND 조건 문법', text: 'Tasks.Filter(Status = "진행중" && Assignee = "홍길동")\n→ 홍길동이 맡은 진행중 태스크만!' },
-              { color: 'yellow', title: '💡 팁', text: '&&는 "그리고"라는 뜻이에요. 두 조건이 모두 참일 때만 필터됩니다.' },
+              { color: 'green', title: '✍️ AND 조건 문법', text: '학샘명단.Filter(Status = "관리진행" AND 선생님 = "홍길동")\n→ 홍길동의 학생 중 관리진행만!' },
+              { color: 'yellow', title: '💡 팁', text: 'AND는 "그리고"라는 뜻이에요. 두 조건이 모두 참일 때만 필터됩니다.' },
             ]
           },
           {
@@ -1031,22 +1031,22 @@ const units = [
             prompt: '빈칸을 채워서 수식을 완성하세요',
             sub: '"긴급"이고 "미완료"인 Tasks만 필터하기',
             sentence: 'Tasks.Filter(Priority = "긴급" ___ Done = false)',
-            blanks: ['&&'],
-            wordbank: ['||', '&&', '+', '='],
-            feedback: '정답! && 는 AND 조건이에요. 두 조건이 모두 참인 행만 골라져요 👍'
+            blanks: ['AND'],
+            wordbank: ['OR', 'AND', '+', '='],
+            feedback: '정답! AND 조건이에요. 두 조건이 모두 참인 행만 골라져요 👍'
           },
           {
             type: 'mcq',
             prompt: '다음 수식의 결과는?',
-            sub: 'Members.Filter(Team = "개발팀" && Active = true)',
+            sub: 'Members.Filter(Team = "B2B팀" AND 재직 중 = true)',
             options: [
-              '개발팀 모든 멤버',
-              '현재 활성화된 모든 멤버',
-              '개발팀이면서 활성화된 멤버만',
-              '개발팀이거나 활성화된 멤버'
+              'B2B팀 모든 팀원',
+              '현재 재직 중인 모든 팀원',
+              'B2B팀이면서 재직 중인 팀원만',
+              'B2B팀이거나 재직 중인 팀원'
             ],
             answer: 2,
-            feedback: '정답! &&는 "그리고"이므로 두 조건을 모두 만족하는 행만 반환해요 ✅'
+            feedback: '정답! AND는 "그리고"이므로 두 조건을 모두 만족하는 행만 반환해요 ✅'
           }
         ]
       },

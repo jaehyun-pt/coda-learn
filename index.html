@@ -6,7 +6,7 @@
 <title>코다 배우기 🦉</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --green:#58cc02;--green-dark:#46a302;--green-light:#d7ffb8;
   --blue:#1cb0f6;--blue-dark:#0f8bc4;--blue-light:#ddf4ff;
   --yellow:#ffc800;--yellow-dark:#e6b000;--yellow-light:#fff9c4;
@@ -20,16 +20,14 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray-900);min-height:100vh;}
 
-/* NAV */
 .topnav{background:var(--white);border-bottom:2px solid var(--gray-200);padding:0 20px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:100;}
 .logo{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;color:var(--green);display:flex;align-items:center;gap:8px;margin-right:32px;}
 .xp-bar{flex:1;display:flex;align-items:center;gap:12px;}
-.xp-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--orange);display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.xp-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--orange);white-space:nowrap;}
 .xp-track{flex:1;height:16px;background:var(--gray-200);border-radius:20px;overflow:hidden;max-width:300px;}
 .xp-fill{height:100%;background:linear-gradient(90deg,var(--yellow),var(--orange));border-radius:20px;transition:width .5s cubic-bezier(.34,1.56,.64,1);width:0%;}
 .streak-badge{display:flex;align-items:center;gap:4px;background:var(--yellow-light);border:2px solid var(--yellow);border-radius:20px;padding:4px 10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--yellow-dark);white-space:nowrap;}
 
-/* LAYOUT */
 .layout{display:flex;min-height:calc(100vh - 60px);max-width:1100px;margin:0 auto;padding:20px;gap:24px;}
 .sidebar{width:220px;flex-shrink:0;}
 .sidebar-section{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
@@ -40,11 +38,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 .unit-btn .unit-icon{font-size:18px;}
 .unit-btn .unit-stars{margin-left:auto;font-size:11px;letter-spacing:-2px;}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.stat-box{background:var(--gray-100);border-radius:var(--radius-sm);padding:10px;text-align:center;}
+.stat-box{background:var(--gray-100);border-radius:var(--radius-sm);padding:10px;text-align:center;cursor:default;}
+.stat-box.clickable{cursor:pointer;transition:all .15s;}
+.stat-box.clickable:hover{background:var(--red-light);border:1px solid var(--red);}
 .stat-val{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;color:var(--blue);}
+.stat-val.red{color:var(--red);}
 .stat-lbl{font-size:10px;color:var(--gray-500);font-weight:600;margin-top:2px;}
 
-/* MAIN */
 .main{flex:1;min-width:0;}
 .unit-header{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px;}
 .unit-emoji{font-size:40px;}
@@ -56,12 +56,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 .unit-progress-bar{width:120px;height:8px;background:var(--gray-200);border-radius:20px;overflow:hidden;margin-top:6px;}
 .unit-progress-fill{height:100%;background:var(--green);border-radius:20px;transition:width .4s ease;}
 
-/* LESSON CARDS */
 .lessons-grid{display:flex;flex-direction:column;gap:12px;}
 .lesson-card{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
 .lesson-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.08);}
 .lesson-card.completed{border-color:var(--green);}
-.lesson-card.completed::after{content:'✓';position:absolute;right:16px;top:50%;transform:translateY(-50%);width:28px;height:28px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:14px;line-height:28px;text-align:center;}
+.lesson-card.completed::after{content:'✓';position:absolute;right:16px;top:50%;transform:translateY(-50%);width:28px;height:28px;background:var(--green);border-radius:50%;color:white;font-weight:900;font-size:14px;line-height:28px;text-align:center;}
 .lesson-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
 .icon-blue{background:var(--blue-light);}
 .icon-green{background:var(--green-light);}
@@ -81,15 +80,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 .start-btn:active{transform:translateY(1px);border-bottom-width:1px;}
 .start-btn.green{background:var(--green);border-color:var(--green-dark);}
 
-/* PRACTICE SECTION */
 .practice-section{background:linear-gradient(135deg,#e8f5e9,#e3f2fd);border:2px solid var(--green);border-radius:var(--radius);padding:20px;margin-top:20px;}
 .practice-label{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:4px 12px;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;letter-spacing:.06em;margin-bottom:12px;}
 .practice-section h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;margin-bottom:6px;}
 .practice-section p{font-size:13px;color:var(--gray-700);margin-bottom:16px;line-height:1.6;}
-.practice-code{background:var(--gray-900);color:#a8ff78;border-radius:var(--radius-sm);padding:14px 16px;font-family:'Courier New',monospace;font-size:13px;line-height:1.7;margin-bottom:12px;position:relative;overflow:auto;}
+.practice-code{background:var(--gray-900);color:#a8ff78;border-radius:var(--radius-sm);padding:14px 16px;font-family:'Courier New',monospace;font-size:13px;line-height:1.7;margin-bottom:12px;overflow:auto;}
 .practice-code .comment{color:#888;}
-.practice-code .fn{color:#79c0ff;}
-.practice-code .str{color:#f8a8a8;}
 .practice-steps{display:flex;flex-direction:column;gap:10px;}
 .practice-step{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;}
 .step-num{width:28px;height:28px;background:var(--blue);border-radius:50%;color:white;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -104,17 +100,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 .modal{background:var(--white);border-radius:24px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;transform:scale(.9);transition:transform .2s;}
 .modal-overlay.visible .modal{transform:scale(1);}
 .modal-topbar{display:flex;align-items:center;padding:16px 20px;border-bottom:2px solid var(--gray-200);gap:12px;position:sticky;top:0;background:var(--white);border-radius:24px 24px 0 0;z-index:1;}
-.modal-close{background:var(--gray-100);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
+.modal-close{background:var(--gray-100);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .modal-close:hover{background:var(--gray-200);}
 .modal-progress-track{flex:1;height:12px;background:var(--gray-200);border-radius:20px;overflow:hidden;}
 .modal-progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#6ee700);border-radius:20px;transition:width .4s cubic-bezier(.34,1.56,.64,1);}
-.modal-hearts{font-size:14px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:2px;}
+.modal-hearts{font-size:14px;font-weight:700;color:var(--red);}
 .modal-body{padding:28px 32px;flex:1;}
 
-/* EXPLAIN */
 .lesson-explain{text-align:center;}
 .explain-emoji{font-size:64px;margin-bottom:16px;display:block;}
-.explain-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;color:var(--gray-900);margin-bottom:8px;}
+.explain-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;margin-bottom:8px;}
 .explain-subtitle{font-size:14px;color:var(--gray-500);margin-bottom:20px;}
 .concept-box{border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;text-align:left;}
 .concept-box.blue{background:var(--blue-light);border:2px solid var(--blue);}
@@ -125,36 +120,31 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 .concept-box p{font-size:13px;color:var(--gray-700);line-height:1.7;}
 .concept-box p code{font-family:'Courier New',monospace;background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px;font-size:12px;font-weight:700;}
 
-/* QUIZ */
 .quiz-prompt{font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;color:var(--gray-900);margin-bottom:6px;line-height:1.4;}
 .quiz-subtext{font-size:13px;color:var(--gray-500);margin-bottom:20px;}
-.quiz-code-block{background:var(--gray-900);color:#a8ff78;border-radius:var(--radius-sm);padding:12px 16px;font-family:'Courier New',monospace;font-size:13px;margin-bottom:20px;line-height:1.6;}
 .options-grid{display:flex;flex-direction:column;gap:10px;}
 .option-btn{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius);padding:14px 18px;cursor:pointer;font-size:14px;font-weight:600;color:var(--gray-700);text-align:left;transition:all .15s;display:flex;align-items:center;gap:12px;font-family:'Noto Sans KR',sans-serif;width:100%;}
 .option-btn:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark);}
-.option-btn.correct{border-color:var(--green)!important;background:var(--green-light)!important;color:var(--green-dark)!important;pointer-events:none;}
+.option-btn.reveal{border-color:var(--green)!important;background:var(--green-light)!important;color:var(--green-dark)!important;pointer-events:none;}
 .option-btn.wrong{border-color:var(--red)!important;background:var(--red-light)!important;color:var(--red)!important;pointer-events:none;}
-.option-btn.reveal{border-color:var(--green);background:var(--green-light);color:var(--green-dark);pointer-events:none;}
 .option-btn.dimmed{opacity:.4;pointer-events:none;}
 .option-letter{width:28px;height:28px;border-radius:8px;background:var(--gray-200);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;flex-shrink:0;transition:all .15s;}
 .option-btn:hover .option-letter{background:var(--blue);color:white;}
-.option-btn.correct .option-letter{background:var(--green);color:white;}
-.option-btn.wrong .option-letter{background:var(--red);color:white;}
 .option-btn.reveal .option-letter{background:var(--green);color:white;}
+.option-btn.wrong .option-letter{background:var(--red);color:white;}
 
 /* FILL BLANK */
-.sentence-wrap{background:var(--gray-100);border-radius:var(--radius);padding:20px;font-family:'Courier New',monospace;font-size:14px;line-height:2;margin-bottom:20px;text-align:center;}
-.blank-slot{display:inline-block;min-width:100px;padding:4px 10px;border-bottom:3px solid var(--gray-300);cursor:pointer;font-family:'Courier New',monospace;font-weight:700;background:var(--blue-light);border-radius:6px;vertical-align:middle;transition:all .15s;color:var(--blue-dark);}
+.sentence-wrap{background:var(--gray-100);border-radius:var(--radius);padding:20px;font-family:'Courier New',monospace;font-size:14px;line-height:2.4;margin-bottom:20px;text-align:center;}
+.blank-slot{display:inline-block;min-width:90px;padding:4px 10px;background:var(--blue-light);border-bottom:3px solid var(--gray-300);border-radius:6px;cursor:pointer;font-family:'Courier New',monospace;font-weight:700;color:var(--blue-dark);vertical-align:middle;transition:all .15s;user-select:none;}
 .blank-slot.filled{border-color:var(--blue);}
 .blank-slot.correct{background:var(--green-light);border-color:var(--green);color:var(--green-dark);}
-.blank-slot.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.blank-slot.wrong-slot{background:var(--red-light);border-color:var(--red);color:var(--red);}
 .word-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-.word-tile{padding:8px 16px;border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);border-radius:10px;background:var(--white);cursor:pointer;font-family:'Courier New',monospace;font-size:13px;font-weight:700;transition:all .1s;}
+.word-tile{padding:8px 16px;border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);border-radius:10px;background:var(--white);cursor:pointer;font-family:'Courier New',monospace;font-size:13px;font-weight:700;transition:all .1s;user-select:none;}
 .word-tile:hover{border-color:var(--blue);background:var(--blue-light);}
 .word-tile.used{opacity:.3;pointer-events:none;}
 .word-tile:active{transform:translateY(2px);border-bottom-width:2px;}
 .check-btn{margin-top:20px;width:100%;padding:14px;border:none;border-bottom:3px solid var(--blue-dark);background:var(--blue);color:white;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;display:none;}
-.check-btn:active{transform:translateY(2px);border-bottom-width:1px;}
 
 /* FEEDBACK */
 .feedback-banner{position:sticky;bottom:0;margin:0 -32px -28px;padding:20px 32px;border-radius:0 0 24px 24px;display:none;animation:slideUp .2s ease;}
@@ -168,27 +158,34 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 .feedback-banner.correct-fb .fb-title{color:var(--green-dark);}
 .feedback-banner.wrong-fb .fb-title{color:var(--red);}
 .fb-text{font-size:13px;color:var(--gray-700);line-height:1.5;margin-bottom:16px;}
-.fb-continue{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;transition:all .1s;}
+.fb-continue{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;}
 .feedback-banner.correct-fb .fb-continue{background:var(--green);color:white;border-bottom:3px solid var(--green-dark);}
 .feedback-banner.wrong-fb .fb-continue{background:var(--red);color:white;border-bottom:3px solid #cc3b3b;}
-.fb-continue:active{transform:translateY(2px);}
 
 /* COMPLETION */
 .completion-screen{text-align:center;padding:20px 0;}
 .completion-trophy{font-size:80px;display:block;margin-bottom:12px;animation:bounce .6s ease;}
 @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-.completion-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:28px;color:var(--gray-900);margin-bottom:8px;}
+.completion-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:28px;margin-bottom:8px;}
 .completion-sub{font-size:14px;color:var(--gray-500);margin-bottom:24px;}
 .xp-earned{display:inline-flex;align-items:center;gap:8px;background:var(--yellow-light);border:2px solid var(--yellow);border-radius:var(--radius);padding:12px 24px;margin-bottom:24px;font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;color:var(--yellow-dark);}
-.completion-btn{background:var(--green);color:white;border:none;border-bottom:4px solid var(--green-dark);padding:16px 48px;border-radius:var(--radius);font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;cursor:pointer;transition:all .1s;}
+.completion-btn{background:var(--green);color:white;border:none;border-bottom:4px solid var(--green-dark);padding:16px 48px;border-radius:var(--radius);font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;cursor:pointer;}
 .completion-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(88,204,2,.3);}
 
-@media(max-width:700px){
-  .layout{flex-direction:column;padding:12px;}
-  .sidebar{width:100%;}
-  .modal-body{padding:20px;}
-  .feedback-banner{margin:0 -20px -20px;padding:16px 20px;}
-}
+/* REVIEW MODAL */
+.review-header{font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;margin-bottom:16px;color:var(--red);}
+.review-empty{text-align:center;padding:32px;color:var(--gray-500);font-size:14px;}
+.review-item{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px;}
+.review-item-q{font-weight:700;font-size:14px;margin-bottom:8px;line-height:1.5;}
+.review-item-wrong{color:var(--red);font-size:12px;margin-bottom:4px;}
+.review-item-wrong span{font-family:'Courier New',monospace;background:var(--red-light);padding:1px 5px;border-radius:4px;}
+.review-item-correct{color:var(--green-dark);font-size:12px;margin-bottom:6px;}
+.review-item-correct span{font-family:'Courier New',monospace;background:var(--green-light);padding:1px 5px;border-radius:4px;}
+.review-item-fb{font-size:12px;color:var(--gray-500);line-height:1.5;border-top:1px solid var(--gray-200);padding-top:8px;margin-top:6px;}
+.review-clear-btn{width:100%;padding:12px;background:var(--red-light);border:2px solid var(--red);color:var(--red);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;margin-bottom:16px;}
+.review-clear-btn:hover{background:var(--red);color:white;}
+
+@media(max-width:700px){.layout{flex-direction:column;padding:12px;}.sidebar{width:100%;}.modal-body{padding:20px;}.feedback-banner{margin:0 -20px -20px;padding:16px 20px;}}
 .bounce-in{animation:bounceIn .4s cubic-bezier(.34,1.56,.64,1);}
 @keyframes bounceIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
 </style>
@@ -220,12 +217,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
         <div class="stat-box"><div class="stat-val" id="statDone">0</div><div class="stat-lbl">✅ 완료</div></div>
         <div class="stat-box"><div class="stat-val" id="statStreak">1</div><div class="stat-lbl">🔥 연속</div></div>
         <div class="stat-box"><div class="stat-val" id="statAcc">—</div><div class="stat-lbl">🎯 정확도</div></div>
+        <div class="stat-box clickable" style="grid-column:1/-1;" onclick="openReviewModal()" title="클릭해서 오답 복습">
+          <div class="stat-val red" id="statWrong">0</div>
+          <div class="stat-lbl">❌ 오답 — 클릭해서 복습</div>
+        </div>
       </div>
     </div>
   </aside>
 
   <main class="main">
-    <div class="unit-header" id="unitHeader">
+    <div class="unit-header">
       <div class="unit-emoji" id="unitEmoji">🔍</div>
       <div>
         <h2 id="unitTitle">Filter 함수</h2>
@@ -242,7 +243,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
   </main>
 </div>
 
-<!-- MODAL -->
+<!-- LESSON MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="checkOverlayClose(event)">
   <div class="modal" id="modal">
     <div class="modal-topbar">
@@ -254,53 +255,92 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
   </div>
 </div>
 
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewOverlay" onclick="if(event.target===this)closeReviewModal()">
+  <div class="modal" id="reviewModal">
+    <div class="modal-topbar">
+      <button class="modal-close" onclick="closeReviewModal()">✕</button>
+      <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;">❌ 오답 복습</span>
+    </div>
+    <div class="modal-body" id="reviewBody"></div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════
-// UNITS DATA
+// STORAGE HELPERS
 // ═══════════════════════════════════════════════
-// IMPORTANT: steps are stored as plain objects with no quotes in onclick.
-// selectMCQ / checkFill receive step index, look up data from currentSteps[].
+const STORE_KEY = 'coda_learn_v3';
 
+function saveState() {
+  const data = {
+    xp,
+    completedCount,
+    totalAns,
+    correctAns,
+    unitDone: unitDone.map(s => [...s]),
+    wrongLog
+  };
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch(e){}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    xp = data.xp || 0;
+    completedCount = data.completedCount || 0;
+    totalAns = data.totalAns || 0;
+    correctAns = data.correctAns || 0;
+    if (data.unitDone) data.unitDone.forEach((arr, i) => { unitDone[i] = new Set(arr); });
+    if (data.wrongLog) wrongLog = data.wrongLog;
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════
+// UNITS DATA  (NO Switch steps, tile values are plain text — no quotes inside)
+// ═══════════════════════════════════════════════
 const units = [
-  // ───── 0: FILTER ─────
+  // ─── 0: FILTER ───
   {
     id:0, emoji:'🔍', title:'Filter 함수', desc:'원하는 데이터만 골라내는 코다의 핵심 기능',
-    practice: {
+    practice:{
       title:'🔍 Filter 실습 — 코다에서 직접 해보기',
-      desc:'아래 단계를 코다 문서에서 직접 따라해 보세요. 학생명단 테이블을 기준으로 실습합니다.',
-      code: '학생명단.Filter(Status = "관리진행")\n// → Status가 "관리진행"인 학생만 표시\n\n학생명단.Filter(Status = "관리진행" AND Grade = "고3")\n// → 고3이면서 관리진행 중인 학생만\n\n학생명단.Filter(Status = "관리진행" OR Status = "신규상담")\n// → 관리진행 또는 신규상담인 학생 모두',
+      desc:'학생명단 테이블을 기준으로 코다 문서에서 직접 따라해 보세요.',
+      code:'학생명단.Filter(Status = "관리진행")\n// → 관리진행 상태 학생만 표시\n\n학생명단.Filter(Status = "관리진행" AND Grade = "고3")\n// → 고3이면서 관리진행인 학생만\n\n학생명단.Filter(Status = "관리진행" OR Status = "신규상담")\n// → 관리진행 또는 신규상담인 학생 모두',
       steps:[
-        { n:1, text:'<strong>학생명단 테이블</strong>을 열고, 빈 컬럼을 하나 추가해 "필터테스트"로 이름을 붙이세요.' },
-        { n:2, text:'해당 컬럼 수식 입력창에 <code>학생명단.Filter(Status = "관리진행")</code> 를 입력하세요.' },
-        { n:3, text:'결과 행 수가 표시되면 정상입니다. <code>.Count()</code> 를 뒤에 붙이면 숫자로도 확인 가능해요.' },
-        { n:4, text:'이번엔 OR 조건을 사용해 <code>학생명단.Filter(Status = "관리진행" OR Status = "신규상담")</code> 를 입력해보세요.' },
-        { n:5, text:'두 결과의 행 수 차이를 비교해보세요. AND vs OR의 결과 차이를 직접 체감할 수 있어요!' }
+        {n:1,text:'<strong>학생명단 테이블</strong>을 열고, 빈 컬럼을 추가해 "필터테스트"로 이름을 붙이세요.'},
+        {n:2,text:'수식 입력창에 <code>학생명단.Filter(Status = "관리진행")</code> 를 입력하세요.'},
+        {n:3,text:'결과 옆에 <code>.Count()</code> 를 붙여 숫자로도 확인해 보세요.'},
+        {n:4,text:'OR 조건: <code>학생명단.Filter(Status = "관리진행" OR Status = "신규상담")</code> 을 입력해보세요.'},
+        {n:5,text:'AND와 OR 결과의 행 수 차이를 비교해보세요!'}
       ]
     },
     lessons:[
       {
         id:'f1', title:'Filter 기초 개념', tag:'beginner', icon:'🔍', iconClass:'icon-blue', xp:10,
         steps:[
-          { type:'explain', emoji:'🔍', title:'Filter 함수란?', subtitle:'조건에 맞는 행만 골라주는 마법 같은 함수예요!',
+          {type:'explain', emoji:'🔍', title:'Filter 함수란?', subtitle:'조건에 맞는 행만 골라주는 마법 같은 함수예요!',
             boxes:[
-              { color:'blue', title:'📌 어떤 상황에 쓰나요?', text:'학생명단에서 "관리진행" 상태 학생만 보고 싶을 때!\n상담이력에서 특정 담당자의 케이스만 볼 때!\n미등록자 중 연락 안 된 학생만 추릴 때!' },
-              { color:'green', title:'✍️ 기본 문법', text:'테이블이름.Filter(조건)\n예시: <code>학생명단.Filter(Status = "관리진행")</code>' },
+              {color:'blue', title:'📌 어떤 상황에 쓰나요?', text:'학생명단에서 "관리진행" 상태 학생만 보고 싶을 때!\n상담이력에서 특정 담당자의 케이스만 볼 때!\n미등록 중 연락 안 된 학생만 추릴 때!'},
+              {color:'green', title:'✍️ 기본 문법', text:'테이블이름.Filter(조건)\n예시: <code>학생명단.Filter(Status = "관리진행")</code>'},
             ]
           },
-          { type:'mcq', prompt:'학생명단 테이블에서 Status가 "관리진행"인 학생만 보려면?', sub:'올바른 수식을 고르세요',
+          {type:'mcq', prompt:'학생명단 테이블에서 Status가 "관리진행"인 학생만 보려면?', sub:'올바른 수식을 고르세요',
             options:['학생명단.Select(Status = "관리진행")', '학생명단.Filter(Status = "관리진행")', 'Filter.학생명단("관리진행")', '학생명단.Show("관리진행")'],
-            answer:1, feedback:'정답! 테이블이름.Filter(조건) 형식이 맞아요. Status 컬럼의 값이 "관리진행"인 행만 반환합니다 😊'
+            answer:1, feedback:'정답! 테이블이름.Filter(조건) 형식이 맞아요. Status 컬럼 값이 "관리진행"인 행만 반환됩니다 😊'
           },
-          { type:'mcq', prompt:'Filter 함수는 무엇을 반환하나요?', sub:'가장 정확한 설명을 고르세요',
+          {type:'mcq', prompt:'Filter 함수는 무엇을 반환하나요?', sub:'가장 정확한 설명을 고르세요',
             options:['조건에 맞는 첫 번째 행 하나', '조건에 맞는 모든 행의 목록', '조건에 맞는 행의 개수', '테이블 전체를 복사'],
             answer:1, feedback:'맞아요! Filter는 조건을 만족하는 모든 행의 목록을 반환해요. 뒤에 .Count()를 붙이면 개수도 셀 수 있어요 🎯'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'상담이력 테이블에서 Counselor가 "김팀장"인 이력만 필터',
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'상담이력 테이블에서 Counselor가 "김팀장"인 이력만 필터',
             sentence:'상담이력.___(Counselor = "김팀장")', blanks:['Filter'],
             wordbank:['Filter','Select','Find','Search'],
-            feedback:'정답! Filter()가 맞아요. 코다에서 조건으로 행을 걸러낼 때는 항상 Filter()를 사용합니다 👍'
+            feedback:'정답! Filter()가 맞아요. 조건으로 행을 걸러낼 때는 항상 Filter()를 사용합니다 👍'
           },
-          { type:'mcq', prompt:'다음 수식의 결과로 맞는 설명은?\n학생명단.Filter(Done = true)', sub:'Done 컬럼은 체크박스 타입입니다',
+          {type:'mcq', prompt:'다음 수식의 결과는?\n학생명단.Filter(Done = true)', sub:'Done 컬럼은 체크박스 타입입니다',
             options:['Done이 false인 행만 반환', 'Done이 true(체크됨)인 행만 반환', '전체 행을 반환', 'Done 컬럼만 반환'],
             answer:1, feedback:'정답! = true 조건은 체크박스가 체크된 행만 필터해요. Done = false 이면 미완료 항목만 볼 수 있어요 ✅'
           },
@@ -309,54 +349,54 @@ const units = [
       {
         id:'f2', title:'AND 조건으로 필터', tag:'beginner', icon:'⚙️', iconClass:'icon-green', xp:15,
         steps:[
-          { type:'explain', emoji:'🔗', title:'두 가지 조건 동시에!', subtitle:'AND를 쓰면 여러 조건을 함께 적용할 수 있어요',
+          {type:'explain', emoji:'🔗', title:'두 가지 조건 동시에!', subtitle:'AND를 쓰면 여러 조건을 함께 적용할 수 있어요',
             boxes:[
-              { color:'green', title:'✍️ AND 조건 문법', text:'테이블.Filter(조건1 AND 조건2)\n\n예: <code>학생명단.Filter(Status = "관리진행" AND Grade = "고3")</code>\n→ 고3이면서 관리진행 중인 학생만!' },
-              { color:'yellow', title:'💡 AND란?', text:'AND는 "그리고"예요. 두 조건이 모두 참일 때만 결과에 포함돼요.\n조건이 많아질수록 결과가 좁아져요.' },
+              {color:'green', title:'✍️ AND 조건 문법', text:'테이블.Filter(조건1 AND 조건2)\n\n예: <code>학생명단.Filter(Status = "관리진행" AND Grade = "고3")</code>\n→ 고3이면서 관리진행 중인 학생만!'},
+              {color:'yellow', title:'💡 AND란?', text:'AND는 "그리고"예요. 두 조건이 모두 참일 때만 결과에 포함돼요.\n조건이 많을수록 결과가 좁아져요.'},
             ]
           },
-          { type:'mcq', prompt:'학생명단에서 Grade가 "고2"이고 Status가 "미등록"인 학생만 필터하려면?', sub:'AND 조건 수식을 고르세요',
+          {type:'mcq', prompt:'학생명단에서 Grade가 "고2"이고 Status가 "미등록"인 학생만 필터하려면?', sub:'AND 조건 수식을 고르세요',
             options:['학생명단.Filter(Grade = "고2" OR Status = "미등록")', '학생명단.Filter(Grade = "고2" AND Status = "미등록")', '학생명단.Filter(Grade = "고2").Filter(Status = "미등록")', 'B와 C 모두 정답'],
-            answer:3, feedback:'정답! AND 조건 하나로 쓰거나, .Filter()를 두 번 체이닝해도 같은 결과예요. 둘 다 올바른 방법입니다 💡'
+            answer:3, feedback:'정답! AND 조건 하나로 쓰거나 .Filter()를 두 번 체이닝해도 같은 결과예요. 둘 다 올바른 방법입니다 💡'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'담당자가 "이팀장"이고 완료되지 않은 태스크만 필터',
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'담당자가 "이팀장"이고 완료되지 않은 태스크만 필터',
             sentence:'업무목록.Filter(Assignee = "이팀장" ___ Done = false)', blanks:['AND'],
             wordbank:['AND','OR','NOT','WHERE'],
             feedback:'정답! AND를 쓰면 두 조건을 모두 만족하는 행만 필터돼요 👍'
           },
-          { type:'mcq', prompt:'다음 수식 결과의 행 수는 어떻게 되나요?\n학생명단.Filter(Grade = "고3" AND Status = "관리진행")', sub:'AND 조건의 특징을 고르세요',
-            options:['고3만 필터할 때보다 결과가 더 많다', '관리진행만 필터할 때보다 결과가 더 많다', '고3만 필터하거나 관리진행만 필터할 때보다 결과가 더 적다', '결과 수는 항상 같다'],
-            answer:2, feedback:'맞아요! AND 조건은 두 조건을 모두 충족해야 하므로, 각 조건을 단독으로 쓸 때보다 결과가 항상 같거나 적어요 📊'
+          {type:'mcq', prompt:'다음 수식의 행 수는?\n학생명단.Filter(Grade = "고3" AND Status = "관리진행")', sub:'AND 조건의 특징을 고르세요',
+            options:['고3만 필터할 때보다 결과가 더 많다', '관리진행만 필터할 때보다 결과가 더 많다', '각 조건을 단독 사용할 때보다 결과가 같거나 더 적다', '결과 수는 항상 같다'],
+            answer:2, feedback:'맞아요! AND 조건은 두 조건을 모두 충족해야 하므로 각 조건을 단독으로 쓸 때보다 항상 같거나 적어요 📊'
           },
-          { type:'mcq', prompt:'3개의 AND 조건을 쓰면 결과는?', sub:'학생명단.Filter(Grade = "고1" AND Status = "관리진행" AND Counselor = "박팀장")',
-            options:['고1 학생 전체', '박팀장이 담당하는 학생 전체', '세 조건을 모두 만족하는 학생만', '세 조건 중 하나라도 맞는 학생'],
-            answer:2, feedback:'정답! AND는 몇 개를 연결해도 모든 조건을 동시에 만족하는 행만 반환해요. 조건이 많을수록 결과는 더 좁아집니다 🎯'
+          {type:'mcq', prompt:'3개의 AND 조건을 쓰면 결과는?\n학생명단.Filter(Grade = "고1" AND Status = "관리진행" AND Counselor = "박팀장")', sub:'AND 다중 조건의 결과',
+            options:['고1 학생 전체', '박팀장 담당 학생 전체', '세 조건을 모두 만족하는 학생만', '세 조건 중 하나라도 맞는 학생'],
+            answer:2, feedback:'정답! AND는 몇 개를 연결해도 모든 조건을 동시에 만족하는 행만 반환해요 🎯'
           },
         ]
       },
       {
         id:'f3', title:'OR 조건으로 필터', tag:'beginner', icon:'🔀', iconClass:'icon-yellow', xp:15,
         steps:[
-          { type:'explain', emoji:'🔀', title:'OR — 이것 또는 저것!', subtitle:'OR을 쓰면 조건 중 하나라도 맞으면 포함돼요',
+          {type:'explain', emoji:'🔀', title:'OR — 이것 또는 저것!', subtitle:'OR을 쓰면 조건 중 하나라도 맞으면 포함돼요',
             boxes:[
-              { color:'blue', title:'✍️ OR 조건 문법', text:'테이블.Filter(조건1 OR 조건2)\n\n예: <code>학생명단.Filter(Status = "관리진행" OR Status = "신규상담")</code>\n→ 관리진행이거나 신규상담인 학생 모두!' },
-              { color:'yellow', title:'💡 AND vs OR 차이', text:'AND → 모두 만족해야 포함 (결과가 좁아짐)\nOR  → 하나만 만족해도 포함 (결과가 넓어짐)' },
+              {color:'blue', title:'✍️ OR 조건 문법', text:'테이블.Filter(조건1 OR 조건2)\n\n예: <code>학생명단.Filter(Status = "관리진행" OR Status = "신규상담")</code>\n→ 관리진행이거나 신규상담인 학생 모두!'},
+              {color:'yellow', title:'💡 AND vs OR 차이', text:'AND → 모두 만족해야 포함 (결과가 좁아짐)\nOR  → 하나만 만족해도 포함 (결과가 넓어짐)'},
             ]
           },
-          { type:'mcq', prompt:'학생명단에서 Status가 "신규상담" 또는 "재상담"인 학생을 모두 보려면?', sub:'OR 조건 수식을 고르세요',
+          {type:'mcq', prompt:'학생명단에서 Status가 "신규상담" 또는 "재상담"인 학생을 모두 보려면?', sub:'OR 조건 수식을 고르세요',
             options:['학생명단.Filter(Status = "신규상담" AND Status = "재상담")', '학생명단.Filter(Status = "신규상담" OR Status = "재상담")', '학생명단.Filter(Status = "신규상담,재상담")', '학생명단.Filter(Status.Contains("상담"))'],
-            answer:1, feedback:'정답! 같은 컬럼의 여러 값을 포함하려면 OR를 써요. AND로 쓰면 하나의 Status가 두 값 동시에 될 수 없으므로 결과가 0이 돼요 😊'
+            answer:1, feedback:'정답! 같은 컬럼의 여러 값을 포함하려면 OR를 써요. AND로 쓰면 하나의 Status가 두 값 동시에 될 수 없어 결과가 0이 돼요 😊'
           },
-          { type:'mcq', prompt:'다음 수식의 결과는?\n학생명단.Filter(Grade = "고1" OR Grade = "고2")', sub:'OR 조건의 결과를 고르세요',
+          {type:'mcq', prompt:'다음 수식의 결과는?\n학생명단.Filter(Grade = "고1" OR Grade = "고2")', sub:'OR 조건의 결과',
             options:['고1과 고2인 학생은 제외된다', '고1만 포함된다', '고1이거나 고2인 학생이 모두 포함된다', '고3만 포함된다'],
             answer:2, feedback:'맞아요! OR는 "또는"이라 고1이거나 고2인 학생이 모두 결과에 포함돼요 ✅'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'"미등록" 또는 "연락불가"인 학생을 모두 필터',
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'"미등록" 또는 "연락불가"인 학생을 모두 필터',
             sentence:'학생명단.Filter(Status = "미등록" ___ Status = "연락불가")', blanks:['OR'],
             wordbank:['AND','OR','NOT','PLUS'],
             feedback:'정답! OR를 쓰면 두 조건 중 하나라도 맞는 행이 모두 포함돼요 👍'
           },
-          { type:'mcq', prompt:'AND와 OR를 함께 쓸 때 올바른 수식은?\n("관리진행" 또는 "신규상담" 이면서) 담당자가 "최팀장"인 학생', sub:'괄호로 우선순위를 지정하는 방법',
+          {type:'mcq', prompt:'AND와 OR를 함께 쓸 때 올바른 수식은?\n("관리진행" 또는 "신규상담") 이면서 담당자가 "최팀장"인 학생', sub:'괄호로 우선순위를 지정',
             options:['학생명단.Filter(Status = "관리진행" OR Status = "신규상담" AND Counselor = "최팀장")', '학생명단.Filter((Status = "관리진행" OR Status = "신규상담") AND Counselor = "최팀장")', '학생명단.Filter(Counselor = "최팀장" AND Status = "관리진행" OR "신규상담")', '모두 동일한 결과'],
             answer:1, feedback:'정답! AND와 OR를 함께 쓸 때는 괄호로 우선순위를 명확하게 지정해야 해요. 괄호 안이 먼저 계산됩니다 🧩'
           },
@@ -365,26 +405,26 @@ const units = [
       {
         id:'f4', title:'thisRow로 연결 필터', tag:'intermediate', icon:'🔗', iconClass:'icon-purple', xp:20,
         steps:[
-          { type:'explain', emoji:'🔗', title:'thisRow + Filter = 최강 조합!', subtitle:'현재 행의 값을 기준으로 다른 테이블을 필터해요',
+          {type:'explain', emoji:'🔗', title:'thisRow + Filter = 최강 조합!', subtitle:'현재 행의 값을 기준으로 다른 테이블을 필터해요',
             boxes:[
-              { color:'blue', title:'📌 실제 사용 예시', text:'담당자 테이블의 각 행에서\n"이 담당자가 맡은 학생 수"를 자동으로 계산!' },
-              { color:'green', title:'✍️ 수식', text:'학생명단.Filter(Counselor = thisRow.Name).Count()\n→ 현재 담당자가 맡은 학생 수 자동 계산\n\n학생명단.Filter(Counselor = thisRow.Name AND Status = "관리진행").Count()\n→ 현재 담당자의 관리진행 학생 수' },
+              {color:'blue', title:'📌 실제 사용 예시', text:'담당자 테이블의 각 행에서\n"이 담당자가 맡은 학생 수"를 자동으로 계산!'},
+              {color:'green', title:'✍️ 수식', text:'<code>학생명단.Filter(Counselor = thisRow.Name).Count()</code>\n→ 현재 담당자가 맡은 학생 수 자동 계산\n\n<code>학생명단.Filter(Counselor = thisRow.Name AND Status = "관리진행").Count()</code>\n→ 현재 담당자의 관리진행 학생 수'},
             ]
           },
-          { type:'mcq', prompt:'thisRow.Name은 무엇을 의미하나요?', sub:'담당자 테이블의 수식 컬럼에서 thisRow를 사용할 때',
+          {type:'mcq', prompt:'thisRow.Name은 무엇을 의미하나요?', sub:'담당자 테이블의 수식 컬럼에서 thisRow를 사용할 때',
             options:['테이블의 첫 번째 행 이름', '수식이 있는 현재 행의 Name 컬럼 값', '모든 행의 이름 목록', '가장 마지막으로 수정된 행의 이름'],
             answer:1, feedback:'맞아요! thisRow는 지금 이 행을 가리켜요. 담당자마다 다른 학생 수를 자동으로 계산해줍니다 🎉'
           },
-          { type:'mcq', prompt:'담당자 테이블의 "담당학생수" 컬럼에 아래 수식을 넣으면?\n학생명단.Filter(Counselor = thisRow.Name).Count()', sub:'수식의 동작을 고르세요',
+          {type:'mcq', prompt:'담당자 테이블의 "담당학생수" 컬럼에 아래 수식을 넣으면?\n학생명단.Filter(Counselor = thisRow.Name).Count()', sub:'수식의 동작을 고르세요',
             options:['모든 담당자에게 동일한 학생 수가 표시된다', '각 담당자 행마다 자신이 맡은 학생 수가 자동으로 계산된다', '학생명단 전체 행 수가 표시된다', '항상 0을 반환한다'],
-            answer:1, feedback:'정답! thisRow 덕분에 각 담당자 행마다 다른 값이 자동 계산돼요. 이게 코다의 가장 강력한 기능 중 하나예요 💪'
+            answer:1, feedback:'정답! thisRow 덕분에 각 담당자 행마다 다른 값이 자동 계산돼요 💪'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'현재 팀의 미완료 업무 수를 계산',
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'현재 팀의 미완료 업무 수를 계산',
             sentence:'업무목록.Filter(Team = ___.Name AND Done = false).Count()', blanks:['thisRow'],
             wordbank:['thisRow','currentRow','thisTable','myRow'],
-            feedback:'정답! thisRow는 현재 행을 가리키는 코다의 핵심 키워드예요. 꼭 기억해 두세요! 🔑'
+            feedback:'정답! thisRow는 현재 행을 가리키는 코다의 핵심 키워드예요 🔑'
           },
-          { type:'mcq', prompt:'담당자별 "관리진행" 학생 수를 담당자 테이블에 자동 계산하는 올바른 수식은?', sub:'thisRow와 Filter, Count를 조합하세요',
+          {type:'mcq', prompt:'담당자별 "관리진행" 학생 수를 담당자 테이블에 자동 계산하는 올바른 수식은?', sub:'thisRow + Filter + Count 조합',
             options:['학생명단.Count(Counselor = thisRow.Name AND Status = "관리진행")', '학생명단.Filter(Counselor = thisRow.Name AND Status = "관리진행").Count()', 'Count(학생명단, Counselor = thisRow.Name)', 'thisRow.학생명단.Filter(Status = "관리진행")'],
             answer:1, feedback:'완벽해요! Filter()로 먼저 걸러내고 뒤에 .Count()를 체이닝하는 패턴을 꼭 기억하세요! 🏆'
           },
@@ -393,46 +433,46 @@ const units = [
     ]
   },
 
-  // ───── 1: IF ─────
+  // ─── 1: IF ───
   {
     id:1, emoji:'🔀', title:'If 함수', desc:'조건에 따라 다른 결과를 자동으로 표시하기',
     practice:{
       title:'🔀 If 함수 실습 — 코다에서 직접 해보기',
       desc:'학생명단 테이블에서 If 함수를 활용해 자동 분류 컬럼을 만들어보세요.',
-      code: '// D-Day 경보 표시\nIf(thisRow.DueDate < Today(), "⚠️ 기한초과", "정상")\n\n// 상담 필요 여부 자동 판단\nIf(thisRow.Status = "미등록" OR thisRow.Status = "연락불가", "📞 연락필요", "정상관리")\n\n// 3단계 등급 분류\nIf(thisRow.Score >= 90, "우수",\n  If(thisRow.Score >= 70, "보통", "관리필요"))',
+      code:'// D-Day 경보 표시\nIf(thisRow.DueDate < Today(), "기한초과", "정상")\n\n// 상담 필요 여부 자동 판단\nIf(thisRow.Status = "미등록" OR thisRow.Status = "연락불가", "연락필요", "정상관리")\n\n// 3단계 분류\nIf(thisRow.Score >= 90, "우수", If(thisRow.Score >= 70, "보통", "관리필요"))',
       steps:[
-        { n:1, text:'학생명단 테이블에 <strong>"관리등급"</strong> 컬럼을 추가하세요.' },
-        { n:2, text:'수식에 <code>If(thisRow.Status = "미등록", "🔴 신규관리", "🟢 정상")</code> 를 입력하세요.' },
-        { n:3, text:'각 학생의 Status에 따라 아이콘이 자동으로 표시되는지 확인하세요.' },
-        { n:4, text:'중첩 If를 사용해 <code>If(Status = "미등록", "🔴", If(Status = "관리진행", "🟡", "🟢"))</code> 로 업그레이드해보세요.' },
-        { n:5, text:'결과를 기반으로 Filter를 조합해 <code>학생명단.Filter(관리등급 = "🔴 신규관리")</code> 도 테스트해보세요!' }
+        {n:1,text:'학생명단 테이블에 <strong>"관리등급"</strong> 컬럼을 추가하세요.'},
+        {n:2,text:'수식: <code>If(thisRow.Status = "미등록", "신규관리", "정상")</code> 을 입력하세요.'},
+        {n:3,text:'각 학생의 Status에 따라 값이 자동으로 바뀌는지 확인하세요.'},
+        {n:4,text:'중첩 If: <code>If(Status = "미등록", "빨강", If(Status = "관리진행", "노랑", "초록"))</code> 로 업그레이드해보세요.'},
+        {n:5,text:'만든 등급 컬럼을 Filter 조건으로 사용해보세요!'}
       ]
     },
     lessons:[
       {
         id:'if1', title:'If 함수 기초', tag:'beginner', icon:'🔀', iconClass:'icon-blue', xp:10,
         steps:[
-          { type:'explain', emoji:'🔀', title:'If — 조건에 따라 다른 결과!', subtitle:'"만약 ~라면 A, 아니면 B" — 이게 If 함수예요!',
+          {type:'explain', emoji:'🔀', title:'If — 조건에 따라 다른 결과!', subtitle:'"만약 ~라면 A, 아니면 B" — 이게 If 함수예요!',
             boxes:[
-              { color:'blue', title:'✍️ 기본 문법', text:'If(조건, 참일때 결과, 거짓일때 결과)\n\n예: <code>If(thisRow.Status = "미등록", "🔴 관리필요", "🟢 정상")</code>' },
-              { color:'green', title:'📌 실전 예시', text:'D-Day 표시:\n<code>If(thisRow.DueDate < Today(), "⚠️ 기한초과", "정상")</code>\n\n출결 상태:\n<code>If(thisRow.Attendance = true, "✅ 출석", "❌ 결석")</code>' },
+              {color:'blue', title:'✍️ 기본 문법', text:'If(조건, 참일때 결과, 거짓일때 결과)\n\n예: <code>If(thisRow.Status = "미등록", "관리필요", "정상")</code>'},
+              {color:'green', title:'📌 실전 예시', text:'D-Day 표시:\n<code>If(thisRow.DueDate < Today(), "기한초과", "정상")</code>\n\n출결 상태:\n<code>If(thisRow.Attendance = true, "출석", "결석")</code>'},
             ]
           },
-          { type:'mcq', prompt:'If(thisRow.Status = "미등록", "관리필요", "정상") 에서 Status가 "관리진행"이면 결과는?', sub:'If 함수의 기본 동작을 고르세요',
+          {type:'mcq', prompt:'If(thisRow.Status = "미등록", "관리필요", "정상") 에서\nStatus가 "관리진행"이면 결과는?', sub:'If 함수의 기본 동작',
             options:['"관리필요"', '"정상"', '"관리진행"', '에러 발생'],
-            answer:1, feedback:'맞아요! 조건(Status = "미등록")이 거짓이므로 세 번째 값 "정상"이 반환돼요. 조건 → 참 결과 → 거짓 결과 순서를 기억하세요 📌'
+            answer:1, feedback:'맞아요! 조건(Status = "미등록")이 거짓이므로 세 번째 값 "정상"이 반환돼요 📌'
           },
-          { type:'mcq', prompt:'담당자가 배정되지 않은 학생에게 "미배정" 표시를 하려면?', sub:'Counselor 컬럼이 비어있을 때',
+          {type:'mcq', prompt:'담당자가 배정되지 않은 학생에게 "미배정" 표시를 하려면?', sub:'Counselor 컬럼이 비어있을 때',
             options:['If(thisRow.Counselor = "", "미배정", "배정완료")', 'If(thisRow.Counselor.IsBlank(), "미배정", "배정완료")', 'If(IsBlank(thisRow.Counselor), "미배정", "배정완료")', '위 세 가지 모두 가능'],
-            answer:3, feedback:'정답! 빈 값 체크는 = "" 또는 .IsBlank()로 모두 가능해요. 코다에서는 IsBlank()가 더 권장되지만 세 방법 모두 동작합니다 💡'
+            answer:3, feedback:'정답! 빈 값 체크는 = "" 또는 .IsBlank() 모두 가능해요. 세 방법 모두 동작합니다 💡'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'점수가 80 이상이면 "합격", 아니면 "재시험"',
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'점수가 80 이상이면 "합격", 아니면 "재시험"',
             sentence:'___(thisRow.Score >= 80, "합격", "재시험")', blanks:['If'],
             wordbank:['If','When','Check','Case'],
-            feedback:'정답! If()가 맞아요. If(조건, 참, 거짓) 구조를 기억하세요 ✅'
+            feedback:'정답! If(조건, 참, 거짓) 구조를 기억하세요 ✅'
           },
-          { type:'mcq', prompt:'If 함수에서 조건이 참(true)일 때 반환되는 값은 몇 번째 인수인가요?', sub:'If(조건, A, B) 에서',
-            options:['첫 번째 (조건 자체)', '두 번째', '세 번째', '네 번째'],
+          {type:'mcq', prompt:'If(조건, A, B) 에서 조건이 참일 때 반환되는 값은?', sub:'If 함수 구조 이해',
+            options:['첫 번째 인수 (조건 자체)', '두 번째 인수 A', '세 번째 인수 B', '모든 인수'],
             answer:1, feedback:'정답! If(조건, 참일때값, 거짓일때값) — 두 번째 자리가 참일 때 반환되는 값이에요 🎯'
           },
         ]
@@ -440,175 +480,179 @@ const units = [
       {
         id:'if2', title:'If 중첩으로 다단계 분류', tag:'intermediate', icon:'🧩', iconClass:'icon-purple', xp:20,
         steps:[
-          { type:'explain', emoji:'🧩', title:'If 안에 If — 여러 단계 분류!', subtitle:'If를 겹쳐 쓰면 3단계, 4단계 조건도 처리 가능해요',
+          {type:'explain', emoji:'🧩', title:'If 안에 If — 여러 단계 분류!', subtitle:'If를 겹쳐 쓰면 3단계, 4단계 조건도 처리 가능해요',
             boxes:[
-              { color:'purple', title:'✍️ 중첩 If 예시', text:'<code>If(thisRow.Status = "미등록", "🔴 신규",\n  If(thisRow.Status = "관리진행", "🟡 진행중",\n    "🟢 완료"))</code>' },
-              { color:'yellow', title:'💡 Switch()로 더 깔끔하게', text:'값이 딱 떨어지는 경우엔 Switch()가 더 읽기 쉬워요!\n<code>Switch(thisRow.Status, "미등록","🔴", "관리진행","🟡", "완료","🟢")</code>' },
+              {color:'purple', title:'✍️ 중첩 If 예시', text:'<code>If(thisRow.Status = "미등록", "신규",\n  If(thisRow.Status = "관리진행", "진행중",\n    "완료"))</code>'},
+              {color:'yellow', title:'💡 중요 팁', text:'조건은 가장 좁은 범위부터 체크해야 해요!\n90점 이상 → 80점 이상 → 그 외 순서로 써야 정확해요.'},
             ]
           },
-          { type:'mcq', prompt:'학생 점수에 따라 등급을 표시하는 수식으로 올바른 것은?\n90점 이상 → "A", 80점 이상 → "B", 그 외 → "C"', sub:'중첩 If 수식을 고르세요',
-            options:['If(Score >= 90, "A") If(Score >= 80, "B", "C")', 'If(Score >= 90, "A", If(Score >= 80, "B", "C"))', 'If(Score >= 90 OR Score >= 80, "A", "B", "C")', 'Switch(Score, 90, "A", 80, "B", "C")'],
+          {type:'mcq', prompt:'점수에 따라 등급을 표시하는 올바른 수식은?\n90점 이상→"A", 80점 이상→"B", 그 외→"C"', sub:'중첩 If 수식',
+            options:['If(Score >= 90, "A") If(Score >= 80, "B", "C")', 'If(Score >= 90, "A", If(Score >= 80, "B", "C"))', 'If(Score >= 90 OR Score >= 80, "A", "B", "C")', 'If(Score >= 80, "B", If(Score >= 90, "A", "C"))'],
             answer:1, feedback:'정답! 중첩 If는 If(조건1, 결과1, If(조건2, 결과2, 기본값)) 패턴을 사용해요. 조건은 높은 기준부터 체크해야 해요! 📊'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 Switch 수식을 완성하세요', sub:'Priority가 "긴급"이면 "🔴", "보통"이면 "🟡", 기본값은 "🟢"',
-            sentence:'Switch(thisRow.Priority, "긴급", "🔴", "보통", ___, "🟢")', blanks:['"🟡"'],
-            wordbank:['"🟡"','"🔵"','"🟠"','"⚫"'],
-            feedback:'정답! Switch(값, 케이스1, 결과1, 케이스2, 결과2, 기본값) 순서로 쓰면 돼요 🎨'
+          {type:'mcq', prompt:'중첩 If에서 조건 순서가 중요한 이유는?', sub:'90점→A, 80점→B, 그 외→C를 판단할 때',
+            options:['순서와 관계없이 결과는 항상 같다', '"80점 이상"을 먼저 쓰면 90점도 B로 잘못 분류될 수 있다', '코다는 자동으로 순서를 최적화해준다', 'If는 동시에 모든 조건을 체크한다'],
+            answer:1, feedback:'정답! If는 첫 번째 조건이 참이면 그 값을 즉시 반환해요. "80점 이상"을 먼저 쓰면 90점도 "B"가 되므로 항상 좁은 조건부터 써야 해요 📌'
           },
-          { type:'mcq', prompt:'If와 Filter를 함께 사용하면 어떤 것이 가능한가요?', sub:'두 함수의 조합 활용',
+          {type:'mcq', prompt:'If와 Filter를 함께 사용하면 어떤 것이 가능한가요?', sub:'두 함수의 조합 활용',
             options:['불가능하다, 함께 쓸 수 없다', 'If로 만든 컬럼 값을 Filter 조건으로 사용할 수 있다', 'Filter 결과에만 If를 적용할 수 있다', 'If는 텍스트에만 사용 가능하다'],
-            answer:1, feedback:'정답! If로 "등급" 컬럼을 만들고, Filter(등급 = "🔴 신규")처럼 그 값을 조건으로 쓸 수 있어요. 함수는 조합할수록 강력해져요 💪'
+            answer:1, feedback:'정답! If로 "등급" 컬럼을 만들고, Filter(등급 = "신규")처럼 그 값을 조건으로 쓸 수 있어요. 함수는 조합할수록 강력해져요 💪'
+          },
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'상담 횟수가 0이면 "첫상담필요", 아니면 "재상담"',
+            sentence:'If(thisRow.ConsultCount ___ 0, "첫상담필요", "재상담")', blanks:['='],
+            wordbank:['=','>=','<=','>'],
+            feedback:'정답! = 0 은 정확히 0일 때를 체크해요. 상담 기록이 없는 학생만 "첫상담필요"로 분류됩니다 ✅'
           },
         ]
       },
     ]
   },
 
-  // ───── 2: BUTTON ─────
+  // ─── 2: BUTTON ───
   {
     id:2, emoji:'🔘', title:'Button 자동화', desc:'버튼 한 번으로 행 추가하고 수정하기',
     practice:{
       title:'🔘 Button 실습 — 코다에서 직접 해보기',
       desc:'학생명단 테이블에 자동화 버튼을 추가해보세요.',
-      code: '// AddRow 버튼 설정 예시\n// 버튼 클릭 시 아래 값으로 새 행 추가:\nTable = 학생명단\nDate = Today()\nCreator = User()\nStatus = "신규상담"\n\n// ModifyRow 버튼 설정 예시  \n// "상담완료" 버튼 클릭 시:\nTarget = thisRow\nStatus = "관리진행"\nLastContact = Today()',
+      code:'// AddRow 버튼 설정 예시\n// 버튼 클릭 시 아래 값으로 새 행 추가:\nTable: 학생명단\nDate: Today()\nCreator: User()\nStatus: "신규상담"\n\n// ModifyRow 버튼 설정 예시\n// "상담완료" 버튼 클릭 시:\nTarget: thisRow\nStatus: "관리진행"\nLastContact: Today()',
       steps:[
-        { n:1, text:'학생명단 테이블에 새 컬럼 추가 → 타입을 <strong>Button</strong>으로 선택하세요.' },
-        { n:2, text:'버튼 이름을 <strong>"상담완료"</strong>로 입력하세요.' },
-        { n:3, text:'Action 설정에서 <strong>Modify row(행 수정)</strong>를 선택하고 대상을 thisRow로 설정하세요.' },
-        { n:4, text:'Status 컬럼 값을 <code>"관리진행"</code>, LastContact 컬럼 값을 <code>Today()</code>로 설정하세요.' },
-        { n:5, text:'버튼을 클릭해서 Status와 날짜가 자동으로 바뀌는지 확인하세요. 한 버튼에 여러 액션도 추가해보세요!' }
+        {n:1,text:'학생명단 테이블에 새 컬럼 추가 → 타입을 <strong>Button</strong>으로 선택하세요.'},
+        {n:2,text:'버튼 이름을 <strong>"상담완료"</strong>로 입력하세요.'},
+        {n:3,text:'Action에서 <strong>Modify row</strong>를 선택하고 대상을 thisRow로 설정하세요.'},
+        {n:4,text:'Status = <code>"관리진행"</code>, LastContact = <code>Today()</code> 로 설정하세요.'},
+        {n:5,text:'버튼 클릭 후 Status와 날짜가 자동으로 바뀌는지 확인하세요!'}
       ]
     },
     lessons:[
       {
         id:'btn1', title:'AddRow로 새 행 자동 추가', tag:'beginner', icon:'➕', iconClass:'icon-green', xp:10,
         steps:[
-          { type:'explain', emoji:'➕', title:'Button + AddRow = 자동 행 추가!', subtitle:'버튼을 클릭하면 미리 설정한 값으로 새 행이 자동 추가돼요',
+          {type:'explain', emoji:'➕', title:'Button + AddRow = 자동 행 추가!', subtitle:'버튼을 클릭하면 미리 설정한 값으로 새 행이 자동 추가돼요',
             boxes:[
-              { color:'green', title:'✍️ AddRow 설정 방법', text:'1. 버튼 컬럼 추가\n2. Action → "Add row(행 추가)" 선택\n3. 테이블 선택 → 학생명단\n4. 컬럼 값 설정:\n   Status = "신규상담"\n   RegisterDate = Today()\n   Creator = User()' },
-              { color:'blue', title:'📌 실전 예시', text:'"신규 학생 등록" 버튼 클릭 시:\n→ 학생명단 테이블에 새 행 추가\n→ 등록일 = 오늘\n→ 담당자 = 현재 로그인 유저\n→ 상태 = "신규상담"' },
+              {color:'green', title:'✍️ AddRow 설정 방법', text:'1. 버튼 컬럼 추가\n2. Action → "Add row" 선택\n3. 테이블 선택 → 학생명단\n4. 컬럼 값 설정:\n   Status = "신규상담"\n   RegisterDate = Today()\n   Creator = User()'},
+              {color:'blue', title:'📌 실전 예시', text:'"신규 학생 등록" 버튼 클릭 시:\n→ 학생명단 테이블에 새 행 추가\n→ 등록일 = 오늘\n→ 담당자 = 현재 로그인 유저\n→ 상태 = "신규상담"'},
             ]
           },
-          { type:'mcq', prompt:'Button의 AddRow 기능으로 할 수 있는 것은?', sub:'가장 정확한 설명을 고르세요',
+          {type:'mcq', prompt:'Button의 AddRow 기능으로 할 수 있는 것은?', sub:'가장 정확한 설명을 고르세요',
             options:['기존 행의 값을 수정한다', '버튼 클릭 시 특정 테이블에 새 행을 추가한다', '조건에 맞는 행을 삭제한다', '테이블을 다른 문서로 복사한다'],
-            answer:1, feedback:'정답! AddRow는 버튼 클릭 시 테이블에 새 행을 자동으로 추가해요. 매번 수동으로 입력하는 번거로움을 없앨 수 있어요 ⏱️'
+            answer:1, feedback:'정답! AddRow는 버튼 클릭 시 테이블에 새 행을 자동으로 추가해요 ⏱️'
           },
-          { type:'mcq', prompt:'"신규 학생 등록" 버튼에서 등록 날짜를 오늘로 자동 설정하려면?', sub:'컬럼 값 설정 방법을 고르세요',
+          {type:'mcq', prompt:'"신규 학생 등록" 버튼에서 등록 날짜를 오늘로 자동 설정하려면?', sub:'컬럼 값 설정 방법',
             options:['RegisterDate = "오늘"', 'RegisterDate = Today()', 'RegisterDate = Now()', 'B와 C 모두 가능'],
-            answer:3, feedback:'정답! Today()는 오늘 날짜(날짜만), Now()는 현재 날짜+시간을 반환해요. 둘 다 쓸 수 있으니 상황에 맞게 선택하세요 📅'
+            answer:3, feedback:'정답! Today()는 오늘 날짜(날짜만), Now()는 날짜+시간을 반환해요. 둘 다 쓸 수 있어요 📅'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 설정을 완성하세요', sub:'버튼 클릭 시 현재 로그인한 사용자를 Creator에 자동 기록',
+          {type:'fillblank', prompt:'빈칸을 채워 설정을 완성하세요', sub:'버튼 클릭 시 현재 로그인한 사용자를 Creator에 자동 기록',
             sentence:'Creator = ___()', blanks:['User'],
             wordbank:['User','Me','Current','Login'],
-            feedback:'정답! User()는 현재 로그인한 사용자를 반환해요. 누가 등록했는지 자동 기록할 때 유용해요 👤'
+            feedback:'정답! User()는 현재 로그인한 사용자를 반환해요 👤'
           },
-          { type:'mcq', prompt:'AddRow 버튼에서 한 번에 여러 컬럼 값을 설정할 수 있나요?', sub:'버튼 기능의 범위를 고르세요',
-            options:['아니요, 컬럼은 한 번에 하나만 설정 가능', '네, 여러 컬럼을 동시에 설정할 수 있다', '최대 3개 컬럼까지만 가능', '텍스트 컬럼만 설정 가능'],
-            answer:1, feedback:'맞아요! AddRow 설정에서 원하는 모든 컬럼에 값을 넣을 수 있어요. 이름, 날짜, 상태, 담당자 등 여러 컬럼을 한 번에 자동 설정해보세요 🚀'
+          {type:'mcq', prompt:'AddRow 버튼에서 한 번에 여러 컬럼 값을 설정할 수 있나요?', sub:'버튼 기능의 범위',
+            options:['아니요, 컬럼은 한 번에 하나만 가능', '네, 여러 컬럼을 동시에 설정할 수 있다', '최대 3개 컬럼까지만 가능', '텍스트 컬럼만 설정 가능'],
+            answer:1, feedback:'맞아요! AddRow 설정에서 원하는 모든 컬럼에 값을 넣을 수 있어요. 이름, 날짜, 상태, 담당자 등 한 번에 자동 설정! 🚀'
           },
         ]
       },
       {
         id:'btn2', title:'ModifyRow로 기존 행 수정', tag:'beginner', icon:'✏️', iconClass:'icon-orange', xp:15,
         steps:[
-          { type:'explain', emoji:'✏️', title:'ModifyRow — 클릭 한 번으로 값 변경!', subtitle:'버튼을 누르면 현재 행의 값을 자동으로 바꿔요',
+          {type:'explain', emoji:'✏️', title:'ModifyRow — 클릭 한 번으로 값 변경!', subtitle:'버튼을 누르면 현재 행의 값을 자동으로 바꿔요',
             boxes:[
-              { color:'blue', title:'✍️ ModifyRow 설정 방법', text:'1. 버튼 컬럼 추가\n2. Action → "Modify row(행 수정)" 선택\n3. 수정할 행 → thisRow 선택\n4. 바꿀 컬럼 & 새 값 설정' },
-              { color:'green', title:'📌 실전 예시: "상담완료" 버튼', text:'→ thisRow 수정\n→ Status = "관리진행"\n→ LastContact = Today()\n→ Done = true' },
-              { color:'yellow', title:'💡 AddRow vs ModifyRow', text:'AddRow: 새 행을 만든다\nModifyRow: 기존 행을 바꾼다\n→ 한 버튼에 둘 다 설정 가능!' },
+              {color:'blue', title:'✍️ ModifyRow 설정 방법', text:'1. 버튼 컬럼 추가\n2. Action → "Modify row" 선택\n3. 수정할 행 → thisRow 선택\n4. 바꿀 컬럼 & 새 값 설정'},
+              {color:'green', title:'📌 실전 예시: "상담완료" 버튼', text:'→ thisRow 수정\n→ Status = "관리진행"\n→ LastContact = Today()\n→ Done = true'},
+              {color:'yellow', title:'💡 AddRow vs ModifyRow', text:'AddRow: 새 행을 만든다\nModifyRow: 기존 행을 바꾼다\n→ 한 버튼에 둘 다 설정 가능!'},
             ]
           },
-          { type:'mcq', prompt:'"상담완료" 버튼 클릭 시 현재 학생의 Status를 "관리진행"으로 바꾸려면?', sub:'올바른 Button 설정을 고르세요',
+          {type:'mcq', prompt:'"상담완료" 버튼 클릭 시 현재 학생의 Status를 "관리진행"으로 바꾸려면?', sub:'올바른 Button 설정',
             options:['AddRow → Status = "관리진행"', 'ModifyRow → thisRow → Status = "관리진행"', 'Filter → Status = "관리진행"', 'DeleteRow → Status = "관리진행"'],
-            answer:1, feedback:'정답! 기존 행의 값을 바꿀 때는 ModifyRow를 써요. thisRow를 대상으로 하면 버튼이 있는 그 행만 수정됩니다 ✏️'
+            answer:1, feedback:'정답! 기존 행의 값을 바꿀 때는 ModifyRow를 써요. thisRow를 대상으로 하면 그 행만 수정됩니다 ✏️'
           },
-          { type:'mcq', prompt:'ModifyRow에서 thisRow를 대상으로 설정하면 어떻게 되나요?', sub:'"thisRow"의 의미를 고르세요',
+          {type:'mcq', prompt:'ModifyRow에서 thisRow를 대상으로 설정하면?', sub:'thisRow의 의미',
             options:['테이블의 첫 번째 행이 수정된다', '모든 행이 동시에 수정된다', '버튼이 위치한 그 행만 수정된다', '가장 최근에 추가된 행이 수정된다'],
-            answer:2, feedback:'맞아요! thisRow는 버튼이 있는 현재 행을 의미해요. 각 학생 행마다 버튼을 클릭하면 그 학생 행만 수정됩니다 🎯'
+            answer:2, feedback:'맞아요! thisRow는 버튼이 있는 현재 행이에요. 각 학생 행마다 버튼을 클릭하면 그 학생 행만 수정돼요 🎯'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 설정을 완성하세요', sub:'"연락완료" 버튼 클릭 시 현재 학생의 마지막 연락일을 오늘로 기록',
+          {type:'fillblank', prompt:'빈칸을 채워 설정을 완성하세요', sub:'"연락완료" 버튼 클릭 시 현재 학생의 마지막 연락일을 오늘로 기록',
             sentence:'ModifyRow(thisRow, LastContact, ___(  ))', blanks:['Today'],
             wordbank:['Today','Now','Date','Current'],
             feedback:'정답! Today()를 쓰면 버튼 클릭 시 날짜가 자동으로 오늘로 기록돼요 📅'
           },
-          { type:'mcq', prompt:'버튼 하나에 여러 액션(AddRow + ModifyRow)을 순서대로 실행할 수 있나요?', sub:'코다 버튼의 다중 액션 기능',
+          {type:'mcq', prompt:'버튼 하나에 여러 액션을 순서대로 실행할 수 있나요?', sub:'코다 버튼의 다중 액션 기능',
             options:['불가능하다, 액션은 하나만 가능', '가능하다, 여러 액션을 순서대로 실행할 수 있다', '유료 플랜에서만 가능하다', '최대 2개까지만 가능하다'],
-            answer:1, feedback:'맞아요! 버튼에 여러 액션을 추가할 수 있어요. 예: 상담 완료 처리 + 다음 상담 일정 추가를 버튼 하나로! 🚀'
+            answer:1, feedback:'맞아요! 버튼에 여러 액션을 추가할 수 있어요. 상담 완료 처리 + 다음 일정 추가를 버튼 하나로! 🚀'
           },
         ]
       },
     ]
   },
 
-  // ───── 3: CROSS-DOC ─────
+  // ─── 3: CROSS-DOC ───
   {
     id:3, emoji:'🔗', title:'Cross-doc', desc:'다른 코다 문서의 데이터를 실시간으로 연결하기',
     practice:{
       title:'🔗 Cross-doc 실습 — 코다에서 직접 해보기',
       desc:'마스터 DB 문서와 팀별 업무 문서를 Cross-doc으로 연결해보세요.',
-      code: '// Cross-doc 테이블 필터 예시\n// (학생명단_CD = Cross-doc으로 가져온 테이블)\n학생명단_CD.Filter(Department = "마케팅팀")\n// → 마케팅팀 학생만 필터\n\n학생명단_CD.Filter(Status = "관리진행").Count()\n// → 관리진행 중인 학생 수 (실시간 동기화!)',
+      code:'// Cross-doc 테이블 필터 예시\n// (학생명단_CD = Cross-doc으로 가져온 테이블)\n학생명단_CD.Filter(Department = "마케팅팀")\n// → 마케팅팀 학생만 필터\n\n학생명단_CD.Filter(Status = "관리진행").Count()\n// → 관리진행 학생 수 (실시간 동기화!)',
       steps:[
-        { n:1, text:'원본 문서(마스터 DB)에서 공유할 테이블 옵션 → <strong>"Allow as cross-doc source"</strong>를 활성화하세요.' },
-        { n:2, text:'팀 업무 문서에서 <strong>새 테이블 추가 → Cross-doc</strong>을 선택하세요.' },
-        { n:3, text:'원본 문서 URL을 붙여넣고, 연결할 테이블을 선택하세요. 이름 뒤에 <code>_CD</code>를 붙여 구분하세요.' },
-        { n:4, text:'가져온 테이블에 <code>학생명단_CD.Filter(Status = "관리진행")</code> 수식을 테스트해보세요.' },
-        { n:5, text:'원본 문서에서 데이터를 수정하면 연결된 문서에 실시간 반영되는지 확인하세요!' }
+        {n:1,text:'원본 문서에서 공유할 테이블 옵션 → <strong>"Allow as cross-doc source"</strong>를 활성화하세요.'},
+        {n:2,text:'팀 업무 문서에서 <strong>새 테이블 추가 → Cross-doc</strong>을 선택하세요.'},
+        {n:3,text:'원본 문서 URL을 붙여넣고, 연결할 테이블을 선택하세요. 이름 뒤에 <code>_CD</code>를 붙여 구분하세요.'},
+        {n:4,text:'<code>학생명단_CD.Filter(Status = "관리진행")</code> 수식을 테스트해보세요.'},
+        {n:5,text:'원본 문서에서 데이터를 수정하면 연결된 문서에 실시간 반영되는지 확인하세요!'}
       ]
     },
     lessons:[
       {
         id:'cd1', title:'Cross-doc 개념과 설정', tag:'beginner', icon:'🔗', iconClass:'icon-blue', xp:10,
         steps:[
-          { type:'explain', emoji:'🔗', title:'Cross-doc — 문서 간 실시간 연결!', subtitle:'다른 코다 문서의 테이블 데이터를 내 문서로 실시간 가져와요',
+          {type:'explain', emoji:'🔗', title:'Cross-doc — 문서 간 실시간 연결!', subtitle:'다른 코다 문서의 테이블 데이터를 내 문서로 실시간 가져와요',
             boxes:[
-              { color:'blue', title:'📌 언제 쓰나요?', text:'마스터 학생명단 문서 → 각 팀별 업무 문서에서 실시간 참조\n인사 DB → 여러 팀이 같은 담당자 정보 공유\n원본 데이터를 한 곳에서만 관리하고 싶을 때!' },
-              { color:'green', title:'✍️ 설정 순서', text:'① 원본 문서 테이블에서\n   "Allow as cross-doc source" 활성화\n\n② 연결할 문서에서\n   테이블 추가 → Cross-doc 선택\n   → 원본 문서 URL + 테이블 선택' },
-              { color:'yellow', title:'⚠️ 꼭 알아두세요!', text:'Cross-doc 테이블은 읽기 전용이에요.\n데이터 수정은 반드시 원본 문서에서!' },
+              {color:'blue', title:'📌 언제 쓰나요?', text:'마스터 학생명단 문서 → 각 팀별 업무 문서에서 실시간 참조\n인사 DB → 여러 팀이 같은 담당자 정보 공유\n원본 데이터를 한 곳에서만 관리하고 싶을 때!'},
+              {color:'green', title:'✍️ 설정 순서', text:'① 원본 문서 테이블에서\n   "Allow as cross-doc source" 활성화\n\n② 연결할 문서에서\n   테이블 추가 → Cross-doc 선택\n   → 원본 문서 URL + 테이블 선택'},
+              {color:'yellow', title:'⚠️ 꼭 알아두세요!', text:'Cross-doc 테이블은 읽기 전용이에요.\n데이터 수정은 반드시 원본 문서에서!'},
             ]
           },
-          { type:'mcq', prompt:'Cross-doc의 주요 용도는?', sub:'가장 적합한 설명을 고르세요',
+          {type:'mcq', prompt:'Cross-doc의 주요 용도는?', sub:'가장 적합한 설명을 고르세요',
             options:['같은 문서 내 두 테이블을 합치기', '다른 코다 문서의 데이터를 실시간으로 참조하기', '엑셀 파일을 코다로 가져오기', '테이블을 PDF로 내보내기'],
-            answer:1, feedback:'정답! Cross-doc은 다른 문서의 테이블을 실시간 연결해요. 마스터 DB를 여러 팀이 공유할 때 정말 유용합니다 🔗'
+            answer:1, feedback:'정답! Cross-doc은 다른 문서의 테이블을 실시간 연결해요 🔗'
           },
-          { type:'mcq', prompt:'Cross-doc으로 가져온 테이블에서 할 수 없는 것은?', sub:'Cross-doc의 제한사항',
+          {type:'mcq', prompt:'Cross-doc으로 가져온 테이블에서 할 수 없는 것은?', sub:'Cross-doc의 제한사항',
             options:['Filter() 수식 적용', '데이터 직접 수정', '다른 테이블과 Relation 연결', '정렬 및 필터 뷰 생성'],
             answer:1, feedback:'맞아요! Cross-doc 테이블은 읽기 전용이에요. 데이터를 바꾸려면 반드시 원본 문서로 가야 해요 📖'
           },
-          { type:'mcq', prompt:'원본 문서의 데이터가 업데이트되면 Cross-doc은?', sub:'동기화 방식',
-            options:['수동으로 "새로고침" 버튼을 눌러야 한다', '자동으로 실시간 동기화된다', '다시 연결 설정을 해야 한다', '변경사항이 반영되지 않는다'],
+          {type:'mcq', prompt:'원본 문서 데이터가 업데이트되면 Cross-doc은?', sub:'동기화 방식',
+            options:['수동으로 새로고침을 눌러야 한다', '자동으로 실시간 동기화된다', '다시 연결 설정을 해야 한다', '변경사항이 반영되지 않는다'],
             answer:1, feedback:'맞아요! Cross-doc은 실시간 자동 동기화돼요. 원본이 바뀌면 연결된 모든 문서에 자동 반영! 🔄'
           },
-          { type:'mcq', prompt:'Cross-doc 테이블 이름 뒤에 "_CD"를 붙이는 이유는?', sub:'네이밍 컨벤션의 목적',
+          {type:'mcq', prompt:'Cross-doc 테이블 이름 뒤에 "_CD"를 붙이는 이유는?', sub:'네이밍 컨벤션의 목적',
             options:['코다 시스템에서 요구하는 필수 규칙이다', '원본 테이블과 구분하기 위한 관례적 표기다', 'Cross-doc 기능을 활성화하는 코드다', '읽기 전용임을 시스템에 알리는 표시다'],
-            answer:1, feedback:'정답! "_CD"는 Cross-Doc의 약자로, 팀에서 관례적으로 사용하는 구분 표기예요. 필수는 아니지만 원본과 헷갈리지 않으려면 꼭 사용하세요 📌'
+            answer:1, feedback:'정답! "_CD"는 Cross-Doc의 약자로 원본과 헷갈리지 않기 위한 구분 표기예요 📌'
           },
         ]
       },
       {
         id:'cd2', title:'Cross-doc + Filter 실전 활용', tag:'intermediate', icon:'⚡', iconClass:'icon-yellow', xp:20,
         steps:[
-          { type:'explain', emoji:'⚡', title:'Cross-doc 테이블도 Filter 가능!', subtitle:'가져온 데이터도 우리 문서에서 마음껏 필터·집계할 수 있어요',
+          {type:'explain', emoji:'⚡', title:'Cross-doc 테이블도 Filter 가능!', subtitle:'가져온 데이터도 우리 문서에서 마음껏 필터·집계할 수 있어요',
             boxes:[
-              { color:'blue', title:'📌 실전 예시', text:'마스터 DB에서 가져온 학생명단_CD에서\n우리 팀 학생만 필터:\n<code>학생명단_CD.Filter(Department = "마케팅팀")</code>' },
-              { color:'green', title:'✍️ 집계까지 활용', text:'관리진행 학생 수 실시간 표시:\n<code>학생명단_CD.Filter(Status = "관리진행").Count()</code>\n\n담당자별 학생 수:\n<code>학생명단_CD.Filter(Counselor = thisRow.Name).Count()</code>' },
+              {color:'blue', title:'📌 실전 예시', text:'마스터 DB에서 가져온 학생명단_CD에서\n우리 팀 학생만 필터:\n<code>학생명단_CD.Filter(Department = "마케팅팀")</code>'},
+              {color:'green', title:'✍️ 집계까지 활용', text:'관리진행 학생 수 실시간 표시:\n<code>학생명단_CD.Filter(Status = "관리진행").Count()</code>\n\n담당자별 학생 수:\n<code>학생명단_CD.Filter(Counselor = thisRow.Name).Count()</code>'},
             ]
           },
-          { type:'mcq', prompt:'Cross-doc 테이블 학생명단_CD에서 "영업팀" 학생만 필터하려면?', sub:'올바른 수식을 고르세요',
+          {type:'mcq', prompt:'Cross-doc 테이블 학생명단_CD에서 "영업팀" 학생만 필터하려면?', sub:'올바른 수식을 고르세요',
             options:['학생명단.Filter(Team = "영업팀")', '학생명단_CD.Filter(Team = "영업팀")', 'CrossDoc.Filter(학생명단, Team = "영업팀")', 'Import(학생명단_CD, "영업팀")'],
-            answer:1, feedback:'정답! Cross-doc 테이블도 일반 테이블처럼 .Filter()를 그대로 사용하면 돼요. 이름만 다를 뿐 수식 방법은 동일합니다 💡'
+            answer:1, feedback:'정답! Cross-doc 테이블도 일반 테이블처럼 .Filter()를 그대로 사용하면 돼요 💡'
           },
-          { type:'mcq', prompt:'여러 팀이 동일한 마스터 학생명단을 Cross-doc으로 사용할 때 장점은?', sub:'Cross-doc의 핵심 이점',
+          {type:'mcq', prompt:'여러 팀이 동일한 마스터 학생명단을 Cross-doc으로 사용할 때 장점은?', sub:'Cross-doc의 핵심 이점',
             options:['각 팀이 독립적으로 데이터를 관리할 수 있다', '마스터 데이터가 바뀌면 모든 팀 문서에 자동 반영된다', '각 팀이 데이터를 직접 수정할 수 있다', '데이터가 여러 곳에 복사되어 안전하다'],
-            answer:1, feedback:'정답! 마스터 DB 하나만 관리하면 연결된 모든 팀 문서에 자동 반영돼요. 데이터 불일치 걱정이 없어집니다 🏆'
+            answer:1, feedback:'정답! 마스터 DB 하나만 관리하면 연결된 모든 팀 문서에 자동 반영돼요 🏆'
           },
-          { type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'Cross-doc으로 가져온 담당자_CD 테이블에서 현재 팀의 담당자 수를 계산',
+          {type:'fillblank', prompt:'빈칸을 채워 수식을 완성하세요', sub:'Cross-doc으로 가져온 담당자_CD 테이블에서 현재 팀의 담당자 수를 계산',
             sentence:'담당자_CD.___(Team = thisRow.TeamName).Count()', blanks:['Filter'],
             wordbank:['Filter','Select','Where','Find'],
-            feedback:'정답! Cross-doc 테이블도 .Filter()를 똑같이 사용해요. 수식 방법은 일반 테이블과 동일합니다 ✅'
+            feedback:'정답! Cross-doc 테이블도 .Filter()를 똑같이 사용해요 ✅'
           },
-          { type:'mcq', prompt:'Cross-doc 테이블을 Filter + Count와 함께 쓰면 어떤 것이 가능한가요?', sub:'실전 활용 범위',
+          {type:'mcq', prompt:'Cross-doc 테이블을 Filter + Count와 함께 쓰면?', sub:'실전 활용 범위',
             options:['불가능하다, Cross-doc은 집계 함수를 지원하지 않는다', '원본 문서의 실시간 데이터를 기반으로 집계를 자동 계산할 수 있다', 'Count만 가능하고 Sum, Average는 불가능하다', '동기화 주기는 하루에 한 번이라 실시간이 아니다'],
-            answer:1, feedback:'완벽해요! Cross-doc + Filter + Count 조합으로 마스터 데이터 기반 실시간 집계 대시보드를 만들 수 있어요. 이게 코다의 진짜 강점입니다 💪'
+            answer:1, feedback:'완벽해요! Cross-doc + Filter + Count 조합으로 실시간 집계 대시보드를 만들 수 있어요 💪'
           },
         ]
       },
@@ -622,10 +666,21 @@ const units = [
 let xp=0, completedCount=0, totalAns=0, correctAns=0;
 let currentUnit=0;
 let unitDone=[new Set(),new Set(),new Set(),new Set()];
+// wrongLog: [{unitId, lessonId, stepIdx, question, wrongAnswer, correctAnswer, feedback}]
+let wrongLog=[];
 
-// modal state
 let curLesson=null, curStepIdx=0, hearts=3;
 let fillState={};
+let currentMCQStep=null;
+let currentFillStep=null;
+
+// tile values stored separately to avoid onclick string escaping issues
+let tileValues=[];
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+loadState();
 
 // ═══════════════════════════════════════════════
 // UNIT / LESSON RENDER
@@ -648,8 +703,7 @@ function renderUnit(){
   document.getElementById('unitPct').textContent=pct+'%';
   document.getElementById('unitFill').style.width=pct+'%';
 
-  const grid=document.getElementById('lessonsGrid');
-  grid.innerHTML=u.lessons.map((l,i)=>{
+  document.getElementById('lessonsGrid').innerHTML=u.lessons.map((l,i)=>{
     const isDone=unitDone[currentUnit].has(l.id);
     return `
       <div class="lesson-card ${isDone?'completed':''}" onclick="openLesson(${currentUnit},${i})">
@@ -669,27 +723,27 @@ function renderUnit(){
     `;
   }).join('');
 
-  // practice
   renderPractice(u.practice);
+  refreshStatUI();
+  updateStars();
 }
 
 function renderPractice(p){
   const el=document.getElementById('practiceArea');
   if(!p){el.innerHTML='';return;}
   const codeLines=p.code.split('\n').map(l=>l.startsWith('//')?`<span class="comment">${l}</span>`:l).join('\n');
-  const stepsHTML=p.steps.map(s=>`
-    <div class="practice-step">
-      <div class="step-num">${s.n}</div>
-      <div class="step-content">${s.text}</div>
-    </div>
-  `).join('');
   el.innerHTML=`
     <div class="practice-section">
       <div class="practice-label">🛠️ 실습</div>
       <h3>${p.title}</h3>
       <p>${p.desc}</p>
       <div class="practice-code">${codeLines}</div>
-      <div class="practice-steps">${stepsHTML}</div>
+      <div class="practice-steps">${p.steps.map(s=>`
+        <div class="practice-step">
+          <div class="step-num">${s.n}</div>
+          <div class="step-content">${s.text}</div>
+        </div>`).join('')}
+      </div>
     </div>
   `;
 }
@@ -703,13 +757,14 @@ function openLesson(uIdx,lIdx){
   curStepIdx=0;
   hearts=3;
   fillState={};
+  currentMCQStep=null;
+  currentFillStep=null;
   updateHearts();
-  showModal();
+  showModal('modalOverlay');
   renderStep();
 }
-
-function showModal(){
-  const o=document.getElementById('modalOverlay');
+function showModal(id){
+  const o=document.getElementById(id);
   o.classList.add('show');
   setTimeout(()=>o.classList.add('visible'),10);
 }
@@ -721,11 +776,9 @@ function closeModal(){
 function checkOverlayClose(e){
   if(e.target===document.getElementById('modalOverlay'))closeModal();
 }
-
 function updateProgress(){
   const total=curLesson.lesson.steps.length;
-  const pct=Math.round(curStepIdx/total*100);
-  document.getElementById('modalProgress').style.width=pct+'%';
+  document.getElementById('modalProgress').style.width=Math.round(curStepIdx/total*100)+'%';
 }
 function updateHearts(){
   document.getElementById('modalHearts').innerHTML='❤️'.repeat(hearts)+'🖤'.repeat(3-hearts);
@@ -736,9 +789,12 @@ function renderStep(){
   const step=curLesson.lesson.steps[curStepIdx];
   const body=document.getElementById('modalBody');
   body.innerHTML='';
+  currentMCQStep=null;
+  currentFillStep=null;
+  tileValues=[];
   if(step.type==='explain') body.innerHTML=buildExplain(step);
-  else if(step.type==='mcq') buildMCQ(step, body);
-  else if(step.type==='fillblank') buildFill(step, body);
+  else if(step.type==='mcq') buildMCQ(step,body);
+  else if(step.type==='fillblank') buildFill(step,body);
 }
 
 // ── EXPLAIN ──
@@ -747,8 +803,7 @@ function buildExplain(step){
     <div class="concept-box ${b.color}">
       <h4>${b.title}</h4>
       <p>${b.text.replace(/\n/g,'<br>')}</p>
-    </div>
-  `).join('');
+    </div>`).join('');
   return `
     <div class="lesson-explain">
       <span class="explain-emoji">${step.emoji}</span>
@@ -758,22 +813,18 @@ function buildExplain(step){
       <button class="start-btn green" style="width:100%;padding:14px;margin-top:16px;font-size:15px;border-radius:12px;" onclick="nextStep()">
         이해했어요! →
       </button>
-    </div>
-  `;
+    </div>`;
 }
 
-// ── MCQ ──
-// KEY FIX: store step in a module-level variable, use index-based onclick
-let currentMCQStep=null;
-function buildMCQ(step, body){
+// ── MCQ — data stored in module var, index-only in onclick ──
+function buildMCQ(step,body){
   currentMCQStep=step;
   const letters=['A','B','C','D'];
   const opts=step.options.map((o,i)=>`
     <button class="option-btn bounce-in" style="animation-delay:${i*0.05}s" onclick="selectMCQ(${i})">
       <div class="option-letter">${letters[i]}</div>
       <span>${o}</span>
-    </button>
-  `).join('');
+    </button>`).join('');
   body.innerHTML=`
     <div class="quiz-prompt">${step.prompt.replace(/\n/g,'<br>')}</div>
     <div class="quiz-subtext">${step.sub}</div>
@@ -782,37 +833,54 @@ function buildMCQ(step, body){
       <div class="fb-top"><span class="fb-icon"></span><span class="fb-title"></span></div>
       <div class="fb-text"></div>
       <button class="fb-continue" onclick="nextStep()">계속하기</button>
-    </div>
-  `;
+    </div>`;
 }
 
 function selectMCQ(idx){
   const step=currentMCQStep;
   if(!step) return;
   const btns=document.querySelectorAll('.option-btn');
-  if(btns[0].classList.contains('correct')||btns[0].classList.contains('wrong')||btns[0].classList.contains('dimmed')) return; // already answered
+  // guard against double-click
+  if([...btns].some(b=>b.classList.contains('reveal')||b.classList.contains('wrong'))) return;
   const isCorrect=(idx===step.answer);
   btns.forEach((b,i)=>{
     if(i===step.answer) b.classList.add('reveal');
     else if(i===idx&&!isCorrect) b.classList.add('wrong');
     else b.classList.add('dimmed');
   });
-  totalAns++; if(isCorrect){correctAns++;} else{hearts=Math.max(0,hearts-1);updateHearts();}
+  totalAns++;
+  if(isCorrect){
+    correctAns++;
+  } else {
+    hearts=Math.max(0,hearts-1);
+    updateHearts();
+    // log wrong answer
+    wrongLog.push({
+      unitId:curLesson.uIdx,
+      lessonTitle:curLesson.lesson.title,
+      stepIdx:curStepIdx,
+      type:'mcq',
+      question:step.prompt,
+      wrongAnswer:step.options[idx],
+      correctAnswer:step.options[step.answer],
+      feedback:step.feedback
+    });
+  }
   showFeedback(isCorrect, isCorrect?'잘했어요! 🎉':'아쉽지만 괜찮아요!', step.feedback);
-  updateStats();
+  saveState();
 }
 
-// ── FILL BLANK ──
-let currentFillStep=null;
-function buildFill(step, body){
+// ── FILL BLANK — tile values in array, index-only in onclick ──
+function buildFill(step,body){
   currentFillStep=step;
   fillState={filled:null,filledIdx:null};
-  const sentHTML=step.sentence.replace('___','<span class="blank-slot" id="blankSlot" onclick="clearBlank()"></span>');
-  const bankHTML=step.wordbank.map((w,i)=>`
-    <div class="word-tile" id="tile${i}" onclick="fillBlank(${i},'${w.replace(/'/g,"\\'")}')">
-      ${w}
-    </div>
-  `).join('');
+  // store tile values in module-level array
+  tileValues=[...step.wordbank];
+  const sentHTML=step.sentence.replace('___',
+    '<span class="blank-slot" id="blankSlot" onclick="clearBlank()">　</span>');
+  const bankHTML=tileValues.map((w,i)=>
+    `<div class="word-tile" id="tile${i}" onclick="fillBlank(${i})">${w}</div>`
+  ).join('');
   body.innerHTML=`
     <div class="quiz-prompt">${step.prompt}</div>
     <div class="quiz-subtext">${step.sub}</div>
@@ -823,23 +891,24 @@ function buildFill(step, body){
       <div class="fb-top"><span class="fb-icon"></span><span class="fb-title"></span></div>
       <div class="fb-text"></div>
       <button class="fb-continue" onclick="nextStep()">계속하기</button>
-    </div>
-  `;
+    </div>`;
 }
 
-function fillBlank(idx,word){
+function fillBlank(idx){
+  // deselect previous tile if any
   if(fillState.filledIdx!==null){
     const prev=document.getElementById('tile'+fillState.filledIdx);
     if(prev) prev.classList.remove('used');
   }
-  fillState.filled=word;
+  fillState.filled=tileValues[idx];
   fillState.filledIdx=idx;
   document.getElementById('tile'+idx).classList.add('used');
   const slot=document.getElementById('blankSlot');
-  slot.textContent=word;
+  slot.textContent=tileValues[idx];
   slot.classList.add('filled');
   document.getElementById('checkBtn').style.display='block';
 }
+
 function clearBlank(){
   if(fillState.filledIdx!==null){
     const t=document.getElementById('tile'+fillState.filledIdx);
@@ -847,24 +916,43 @@ function clearBlank(){
   }
   fillState={filled:null,filledIdx:null};
   const slot=document.getElementById('blankSlot');
-  slot.textContent='';
-  slot.classList.remove('filled');
+  slot.textContent='　';
+  slot.classList.remove('filled','correct','wrong-slot');
   document.getElementById('checkBtn').style.display='none';
 }
+
 function checkFill(){
   const step=currentFillStep;
   if(!step||fillState.filled===null) return;
   document.querySelectorAll('.word-tile').forEach(t=>t.style.pointerEvents='none');
   document.getElementById('checkBtn').style.display='none';
-  const isCorrect=fillState.filled===step.blanks[0];
+  const isCorrect=(fillState.filled===step.blanks[0]);
   const slot=document.getElementById('blankSlot');
-  slot.classList.add(isCorrect?'correct':'wrong');
-  totalAns++; if(isCorrect){correctAns++;} else{hearts=Math.max(0,hearts-1);updateHearts();}
-  showFeedback(isCorrect,isCorrect?'완벽해요! 🎉':'다시 확인해봐요!',isCorrect?step.feedback:`정답은 "${step.blanks[0]}"이에요. ${step.feedback}`);
-  updateStats();
+  slot.classList.add(isCorrect?'correct':'wrong-slot');
+  if(!isCorrect) slot.textContent=fillState.filled;
+  totalAns++;
+  if(isCorrect){
+    correctAns++;
+  } else {
+    hearts=Math.max(0,hearts-1);
+    updateHearts();
+    wrongLog.push({
+      unitId:curLesson.uIdx,
+      lessonTitle:curLesson.lesson.title,
+      stepIdx:curStepIdx,
+      type:'fill',
+      question:step.prompt+'\n'+step.sub,
+      wrongAnswer:fillState.filled,
+      correctAnswer:step.blanks[0],
+      feedback:step.feedback
+    });
+  }
+  showFeedback(isCorrect,isCorrect?'완벽해요! 🎉':'다시 확인해봐요!',
+    isCorrect?step.feedback:`정답은 "${step.blanks[0]}"이에요. ${step.feedback}`);
+  saveState();
 }
 
-// ── FEEDBACK & NEXT ──
+// ── FEEDBACK / NEXT ──
 function showFeedback(ok,title,text){
   const b=document.getElementById('feedbackBanner');
   b.className='feedback-banner show '+(ok?'correct-fb':'wrong-fb');
@@ -875,8 +963,10 @@ function showFeedback(ok,title,text){
 
 function nextStep(){
   curStepIdx++;
+  currentMCQStep=null;
+  currentFillStep=null;
+  tileValues=[];
   if(curStepIdx>=curLesson.lesson.steps.length){showCompletion();return;}
-  currentMCQStep=null; currentFillStep=null;
   document.getElementById('modalBody').innerHTML='';
   setTimeout(()=>renderStep(),30);
 }
@@ -894,32 +984,78 @@ function showCompletion(){
       <div><div class="xp-earned">⚡ +${alreadyDone?0:lesson.xp} XP 획득!</div></div>
       <br>
       <button class="completion-btn" onclick="closeModal();renderUnit();">계속 배우기 →</button>
-    </div>
-  `;
-  renderUnit(); updateStars();
+    </div>`;
+  saveState(); updateStars(); refreshStatUI();
 }
 
 // ── XP / STATS ──
 function addXP(amount){
   xp+=amount;
   document.getElementById('xpVal').textContent=xp;
-  document.getElementById('statXP').textContent=xp;
+  refreshStatUI();
   document.getElementById('xpFill').style.width=Math.min((xp%100)/100*100,100)+'%';
 }
-function updateStats(){
+
+function refreshStatUI(){
+  document.getElementById('statXP').textContent=xp;
   document.getElementById('statDone').textContent=completedCount;
   document.getElementById('statAcc').textContent=totalAns>0?Math.round(correctAns/totalAns*100)+'%':'—';
+  document.getElementById('statWrong').textContent=wrongLog.length;
 }
+
 function updateStars(){
   units.forEach((u,i)=>{
-    const done=unitDone[i].size, total=u.lessons.length;
+    const done=unitDone[i].size,total=u.lessons.length;
     const el=document.getElementById('stars'+i);
     if(!el) return;
     el.textContent=done===0?'☆':done<total?'⭐☆':'⭐⭐';
   });
 }
 
-// ── INIT ──
+// ═══════════════════════════════════════════════
+// REVIEW MODAL
+// ═══════════════════════════════════════════════
+function openReviewModal(){
+  const body=document.getElementById('reviewBody');
+  const unitNames=['Filter 함수','If 함수','Button 자동화','Cross-doc'];
+  if(wrongLog.length===0){
+    body.innerHTML='<div class="review-empty">🎉 오답이 없어요! 모두 정확하게 맞혔어요.</div>';
+  } else {
+    body.innerHTML=`
+      <div class="review-header">❌ 오답 목록 (${wrongLog.length}개)</div>
+      <button class="review-clear-btn" onclick="clearWrongLog()">🗑️ 오답 기록 초기화</button>
+      ${wrongLog.map((w,i)=>`
+        <div class="review-item">
+          <div style="font-size:10px;color:var(--gray-300);font-weight:700;text-transform:uppercase;margin-bottom:6px;">
+            ${unitNames[w.unitId]} · ${w.lessonTitle}
+          </div>
+          <div class="review-item-q">${w.question.replace(/\n/g,'<br>')}</div>
+          <div class="review-item-wrong">내 답: <span>${w.wrongAnswer}</span></div>
+          <div class="review-item-correct">정답: <span>${w.correctAnswer}</span></div>
+          <div class="review-item-fb">${w.feedback}</div>
+        </div>
+      `).join('')}`;
+  }
+  showModal('reviewOverlay');
+}
+
+function closeReviewModal(){
+  const o=document.getElementById('reviewOverlay');
+  o.classList.remove('visible');
+  setTimeout(()=>o.classList.remove('show'),200);
+}
+
+function clearWrongLog(){
+  if(!confirm('오답 기록을 모두 삭제할까요?')) return;
+  wrongLog=[];
+  saveState();
+  refreshStatUI();
+  closeReviewModal();
+}
+
+// ── INIT RENDER ──
+refreshStatUI();
+updateStars();
 renderUnit();
 </script>
 </body>

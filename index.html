@@ -924,16 +924,19 @@ function logout(){
 }
 
 // ═══════════════════════════════════════════════
-// INIT
+// INIT — DOM 완전히 로드된 후 실행
 // ═══════════════════════════════════════════════
-const _hasSession = loadState();
-if(_hasSession && currentUserName){
-  hideLoginWall();
-  document.getElementById('userNameDisplay').textContent=currentUserName;
-  document.getElementById('topUserChip').style.display='flex';
-} else {
-  showLoginWall();
-}
+document.addEventListener('DOMContentLoaded', function(){
+  const _hasSession = loadState();
+  if(_hasSession && currentUserName){
+    hideLoginWall();
+    document.getElementById('userNameDisplay').textContent=currentUserName;
+    document.getElementById('topUserChip').style.display='flex';
+    refreshStatUI(); updateStars(); renderUnit();
+  } else {
+    showLoginWall();
+  }
+});
 
 // ═══════════════════════════════════════════════
 // UNIT / LESSON RENDER

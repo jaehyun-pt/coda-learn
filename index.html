@@ -5,6 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>코다 배우기 🦉</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc }
+    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ─────────────────────────────────────────────
+  // 🔧 Firebase 설정값 (아래 값을 본인 프로젝트 것으로 교체하세요)
+  // Firebase Console → 프로젝트 설정 → 웹 앱 추가 후 복사
+  // ─────────────────────────────────────────────
+  const firebaseConfig = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // ── 앱에 firebase 함수 노출 ──
+  window._fb = {
+    // Google 로그인 팝업
+    async login() {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      try { await signInWithPopup(auth, provider); }
+      catch(e) { console.error('Login error', e); }
+    },
+    // 로그아웃
+    async logout() {
+      await signOut(auth);
+    },
+    // Firestore에 현재 state 저장
+    async save(uid, data) {
+      try {
+        await setDoc(doc(db, 'users', uid), data);
+      } catch(e) { console.error('Save error', e); }
+    },
+    // Firestore에서 state 불러오기
+    async load(uid) {
+      try {
+        const snap = await getDoc(doc(db, 'users', uid));
+        return snap.exists() ? snap.data() : null;
+      } catch(e) { console.error('Load error', e); return null; }
+    }
+  };
+
+  // ── 인증 상태 변경 감지 ──
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // 로그인 성공 → Firestore에서 기록 불러와 UI에 반영
+      window._currentUser = user;
+      const cloudData = await window._fb.load(user.uid);
+      if (cloudData) window._applyCloudState(cloudData);
+      window._onLoginUI(user);
+    } else {
+      window._currentUser = null;
+      window._onLogoutUI();
+    }
+  });
+</script>
 <style>
 :root{
   --green:#58cc02;--green-dark:#46a302;--green-light:#d7ffb8;
@@ -192,6 +259,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 </head>
 <body>
 
+<!-- LOGIN WALL -->
+<div id="loginWall" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:24px;padding:40px 36px;max-width:400px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25);">
+    <div style="font-size:72px;margin-bottom:12px;display:block;animation:bounce .8s ease infinite;">🦉</div>
+    <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:26px;margin-bottom:8px;">코다런에 오신 것을 환영해요!</div>
+    <p style="font-size:14px;color:var(--gray-500);line-height:1.6;margin-bottom:28px;">이름을 입력하면 학습 기록이 저장되고<br>다른 기기에서도 이어서 학습할 수 있어요.</p>
+    <input id="nameInput" type="text" placeholder="이름을 입력하세요 (예: 김팀장)"
+      onkeydown="handleNameKey(event)"
+      style="width:100%;padding:14px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;
+             border:2px solid var(--gray-200);border-radius:var(--radius-sm);outline:none;margin-bottom:12px;
+             transition:border-color .15s;"
+      onfocus="this.style.borderColor='var(--blue)'"
+    />
+    <button id="loginBtn" onclick="submitLogin()"
+      style="width:100%;padding:14px;background:var(--green);color:white;border:none;border-bottom:3px solid var(--green-dark);
+             border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;">
+      시작하기 →
+    </button>
+    <p style="margin-top:14px;font-size:11px;color:var(--gray-300);line-height:1.5;">
+      입력한 이름으로 학습 기록이 코다 테이블에 저장돼요.<br>API 미설정 시 이 기기에만 저장됩니다.
+    </p>
+  </div>
+</div>
+
 <nav class="topnav">
   <div class="logo">🦉 코다런</div>
   <div class="xp-bar">
@@ -199,6 +290,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
     <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
   </div>
   <div class="streak-badge">🔥 <span id="streakVal">1</span>일 연속</div>
+  <!-- 로그인 후 표시되는 유저 칩 -->
+  <div id="topUserChip" style="display:none;align-items:center;gap:8px;margin-left:12px;flex-shrink:0;">
+    <div style="width:8px;height:8px;background:var(--green);border-radius:50%;"></div>
+    <span id="userNameDisplay" style="font-size:13px;font-weight:700;color:var(--gray-700);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    <button onclick="logout()"
+      style="background:none;border:1px solid var(--gray-200);border-radius:12px;padding:3px 10px;
+             font-size:11px;font-weight:700;color:var(--gray-400);cursor:pointer;transition:all .15s;"
+      onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+      onmouseout="this.style.borderColor='var(--gray-200)';this.style.color='var(--gray-400)'">
+      로그아웃
+    </button>
+  </div>
 </nav>
 
 <div class="layout">
@@ -221,6 +324,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
           <div class="stat-val red" id="statWrong">0</div>
           <div class="stat-lbl">❌ 오답 — 클릭해서 복습</div>
         </div>
+        <div id="syncStatusBox" style="grid-column:1/-1;background:var(--gray-100);border-radius:var(--radius-sm);padding:8px 10px;text-align:center;font-size:11px;color:var(--gray-500);font-weight:600;"></div>
       </div>
     </div>
   </aside>
@@ -268,16 +372,87 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 
 <script>
 // ═══════════════════════════════════════════════
-// STORAGE HELPERS
+// ⚙️  CODA API 설정  ← 이 세 값만 교체하면 연동 완료
 // ═══════════════════════════════════════════════
-const STORE_KEY = 'coda_learn_v3';
+const CODA_CONFIG = {
+  token:       'fb384521-f69a-490e-a18d-c391fbda4bf6',   // 코다 계정 → API Tokens → New token
+  docId:       'dHDLpF1wXy7',           // URL의 d뒤 부분  예: dAbc123XYZ
+  tableLesson: 'grid-KeppF18tMK',  // 학습기록 테이블  예: grid-abc123
+  tableWrong:  'grid-EEGH_REJba',   // 오답기록 테이블  예: grid-def456
+};
+
+// ── Coda API 헬퍼 ──
+const CodaAPI = {
+  base()  { return `https://coda.io/apis/v1/docs/${CODA_CONFIG.docId}`; },
+  hdrs()  { return { 'Authorization': `Bearer ${CODA_CONFIG.token}`, 'Content-Type': 'application/json' }; },
+  ready() { return !CODA_CONFIG.token.startsWith('YOUR_'); },
+
+  async addRow(tableId, cells) {
+    if (!this.ready()) return;
+    try {
+      await fetch(`${this.base()}/tables/${tableId}/rows`, {
+        method:'POST', headers:this.hdrs(),
+        body: JSON.stringify({ rows:[{ cells }] })
+      });
+    } catch(e) { console.warn('Coda addRow error:', e); }
+  },
+
+  async logLesson(userName, lesson, unitName, earnedXP) {
+    await this.addRow(CODA_CONFIG.tableLesson, [
+      { column:'Name',        value: userName },
+      { column:'LessonId',    value: lesson.id },
+      { column:'LessonTitle', value: lesson.title },
+      { column:'UnitName',    value: unitName },
+      { column:'XP',          value: earnedXP },
+      { column:'CompletedAt', value: new Date().toISOString() },
+    ]);
+  },
+
+  async logWrong(userName, unitName, lessonTitle, question, wrongAns, correctAns) {
+    await this.addRow(CODA_CONFIG.tableWrong, [
+      { column:'Name',          value: userName },
+      { column:'UnitName',      value: unitName },
+      { column:'LessonTitle',   value: lessonTitle },
+      { column:'Question',      value: question },
+      { column:'WrongAnswer',   value: wrongAns },
+      { column:'CorrectAnswer', value: correctAns },
+      { column:'LoggedAt',      value: new Date().toISOString() },
+    ]);
+  },
+
+  // 기존 완료 레슨 복원
+  async fetchCompleted(userName) {
+    if (!this.ready()) return [];
+    try {
+      const url = `${this.base()}/tables/${CODA_CONFIG.tableLesson}/rows?limit=500`;
+      const res = await fetch(url, { headers: this.hdrs() });
+      const data = await res.json();
+      const rows = data.items || [];
+      return rows
+        .filter(r => {
+          const vals = Object.values(r.values || {});
+          return vals.some(v => String(v) === userName);
+        })
+        .map(r => {
+          const vals = r.values || {};
+          for (const [k,v] of Object.entries(vals)) {
+            if (k === 'LessonId' || k.toLowerCase().includes('lessonid')) return String(v);
+          }
+          return null;
+        }).filter(Boolean);
+    } catch(e) { console.warn('Coda fetch error:', e); return []; }
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STORAGE (localStorage — 기기 내 캐시)
+// ═══════════════════════════════════════════════
+const STORE_KEY = 'coda_learn_v4';
 
 function saveState() {
   const data = {
-    xp,
-    completedCount,
-    totalAns,
-    correctAns,
+    xp, completedCount, totalAns, correctAns,
+    userName: currentUserName,
     unitDone: unitDone.map(s => [...s]),
     wrongLog
   };
@@ -287,15 +462,17 @@ function saveState() {
 function loadState() {
   try {
     const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return;
+    if (!raw) return false;
     const data = JSON.parse(raw);
     xp = data.xp || 0;
     completedCount = data.completedCount || 0;
     totalAns = data.totalAns || 0;
     correctAns = data.correctAns || 0;
+    currentUserName = data.userName || '';
     if (data.unitDone) data.unitDone.forEach((arr, i) => { unitDone[i] = new Set(arr); });
     if (data.wrongLog) wrongLog = data.wrongLog;
-  } catch(e) {}
+    return !!currentUserName;
+  } catch(e) { return false; }
 }
 
 // ═══════════════════════════════════════════════
@@ -666,21 +843,65 @@ const units = [
 let xp=0, completedCount=0, totalAns=0, correctAns=0;
 let currentUnit=0;
 let unitDone=[new Set(),new Set(),new Set(),new Set()];
-// wrongLog: [{unitId, lessonId, stepIdx, question, wrongAnswer, correctAnswer, feedback}]
 let wrongLog=[];
+let currentUserName='';
 
 let curLesson=null, curStepIdx=0, hearts=3;
 let fillState={};
 let currentMCQStep=null;
 let currentFillStep=null;
-
-// tile values stored separately to avoid onclick string escaping issues
 let tileValues=[];
+
+// ═══════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════
+function showLoginWall(){ document.getElementById('loginWall').style.display='flex'; }
+function hideLoginWall(){ document.getElementById('loginWall').style.display='none'; }
+
+async function submitLogin(){
+  const input=document.getElementById('nameInput');
+  const name=input.value.trim();
+  if(!name){ input.focus(); input.style.borderColor='var(--red)'; return; }
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true; btn.textContent='불러오는 중...';
+  currentUserName=name;
+
+  if(CodaAPI.ready()){
+    try{
+      const ids=await CodaAPI.fetchCompleted(name);
+      ids.forEach(lid=>{
+        units.forEach((u,ui)=>{ if(u.lessons.some(l=>l.id===lid)){ unitDone[ui].add(lid); } });
+      });
+      completedCount=[...unitDone].reduce((a,s)=>a+s.size,0);
+    }catch(e){ console.warn('복원 실패:', e); }
+  }
+
+  saveState();
+  hideLoginWall();
+  document.getElementById('userNameDisplay').textContent=name;
+  document.getElementById('topUserChip').style.display='flex';
+  refreshStatUI(); updateStars(); renderUnit();
+}
+
+function handleNameKey(e){ if(e.key==='Enter') submitLogin(); }
+
+function logout(){
+  if(!confirm('로그아웃하면 이 기기의 캐시가 지워져요.\n(코다에 저장된 기록은 유지됩니다)\n\n로그아웃할까요?')) return;
+  localStorage.removeItem(STORE_KEY);
+  location.reload();
+}
 
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
-loadState();
+const _hasSession = loadState();
+if(_hasSession && currentUserName){
+  hideLoginWall();
+  document.getElementById('userNameDisplay').textContent=currentUserName;
+  document.getElementById('topUserChip').style.display='flex';
+} else {
+  showLoginWall();
+}
 
 // ═══════════════════════════════════════════════
 // UNIT / LESSON RENDER
@@ -854,17 +1075,18 @@ function selectMCQ(idx){
   } else {
     hearts=Math.max(0,hearts-1);
     updateHearts();
-    // log wrong answer
-    wrongLog.push({
-      unitId:curLesson.uIdx,
-      lessonTitle:curLesson.lesson.title,
-      stepIdx:curStepIdx,
-      type:'mcq',
+    const _wEntry={
+      unitId:curLesson.uIdx, lessonTitle:curLesson.lesson.title,
+      stepIdx:curStepIdx, type:'mcq',
       question:step.prompt,
       wrongAnswer:step.options[idx],
       correctAnswer:step.options[step.answer],
       feedback:step.feedback
-    });
+    };
+    wrongLog.push(_wEntry);
+    CodaAPI.logWrong(currentUserName, units[curLesson.uIdx].title,
+      curLesson.lesson.title, step.prompt,
+      step.options[idx], step.options[step.answer]);
   }
   showFeedback(isCorrect, isCorrect?'잘했어요! 🎉':'아쉽지만 괜찮아요!', step.feedback);
   saveState();
@@ -936,16 +1158,18 @@ function checkFill(){
   } else {
     hearts=Math.max(0,hearts-1);
     updateHearts();
-    wrongLog.push({
-      unitId:curLesson.uIdx,
-      lessonTitle:curLesson.lesson.title,
-      stepIdx:curStepIdx,
-      type:'fill',
+    const _wFill={
+      unitId:curLesson.uIdx, lessonTitle:curLesson.lesson.title,
+      stepIdx:curStepIdx, type:'fill',
       question:step.prompt+'\n'+step.sub,
       wrongAnswer:fillState.filled,
       correctAnswer:step.blanks[0],
       feedback:step.feedback
-    });
+    };
+    wrongLog.push(_wFill);
+    CodaAPI.logWrong(currentUserName, units[curLesson.uIdx].title,
+      curLesson.lesson.title, step.prompt+' / '+step.sub,
+      fillState.filled, step.blanks[0]);
   }
   showFeedback(isCorrect,isCorrect?'완벽해요! 🎉':'다시 확인해봐요!',
     isCorrect?step.feedback:`정답은 "${step.blanks[0]}"이에요. ${step.feedback}`);
@@ -974,7 +1198,13 @@ function nextStep(){
 function showCompletion(){
   const lesson=curLesson.lesson;
   const alreadyDone=unitDone[curLesson.uIdx].has(lesson.id);
-  if(!alreadyDone){unitDone[curLesson.uIdx].add(lesson.id);addXP(lesson.xp);completedCount++;}
+  if(!alreadyDone){
+    unitDone[curLesson.uIdx].add(lesson.id);
+    addXP(lesson.xp);
+    completedCount++;
+    const unitName=units[curLesson.uIdx].title;
+    CodaAPI.logLesson(currentUserName, lesson, unitName, lesson.xp); // 코다에 기록
+  }
   document.getElementById('modalProgress').style.width='100%';
   document.getElementById('modalBody').innerHTML=`
     <div class="completion-screen">
@@ -1001,6 +1231,16 @@ function refreshStatUI(){
   document.getElementById('statDone').textContent=completedCount;
   document.getElementById('statAcc').textContent=totalAns>0?Math.round(correctAns/totalAns*100)+'%':'—';
   document.getElementById('statWrong').textContent=wrongLog.length;
+  // 코다 API 연동 상태 표시
+  const sb=document.getElementById('syncStatusBox');
+  if(sb){
+    if(CodaAPI.ready()){
+      sb.innerHTML='<span style="color:var(--green-dark);">☁️ 코다 동기화 활성화</span>';
+      sb.style.background='var(--green-light)';
+    } else {
+      sb.innerHTML='⚠️ 로컬 저장 중 <span style="font-weight:400;">(API 미설정)</span>';
+    }
+  }
 }
 
 function updateStars(){
@@ -1054,9 +1294,12 @@ function clearWrongLog(){
 }
 
 // ── INIT RENDER ──
-refreshStatUI();
-updateStars();
-renderUnit();
+// (renderUnit is called inside login flow; call here only if already logged in)
+if(_hasSession && currentUserName){
+  refreshStatUI();
+  updateStars();
+  renderUnit();
+}
 </script>
 </body>
 </html>

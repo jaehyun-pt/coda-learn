@@ -311,14 +311,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 // ⚙️ 관리자 설정값 — 토큰만 교체하면 됩니다
 const CODA_CONFIG = {
   token:       'fb384521-f69a-490e-a18d-c391fbda4bf6',  // ← 여기에 토큰 붙여넣기
-  docId:       '_dHDLpF1wXy7',
+  docId:       'dHDLpF1wXy7',
   tableLesson: 'grid-KeppF18tMK',
   tableWrong:  'grid-EEGH_REJba',
 };
 
 // ── Coda API ──
 const CodaAPI = {
-  BASE: `https://coda.io/apis/v1/docs/_dHDLpF1wXy7`,
+  BASE: `https://coda.io/apis/v1/docs/dHDLpF1wXy7`,
   hdrs() {
     return {
       'Authorization': `Bearer ${CODA_CONFIG.token}`,

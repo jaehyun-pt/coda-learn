@@ -375,72 +375,113 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 // ⚙️  CODA API 설정  ← 이 세 값만 교체하면 연동 완료
 // ═══════════════════════════════════════════════
 const CODA_CONFIG = {
-  token:       'fb384521-f69a-490e-a18d-c391fbda4bf6',   // 코다 계정 → API Tokens → New token
-  docId:       'dHDLpF1wXy7',           // URL의 d뒤 부분  예: dAbc123XYZ
-  tableLesson: 'grid-KeppF18tMK',  // 학습기록 테이블  예: grid-abc123
-  tableWrong:  'grid-EEGH_REJba',   // 오답기록 테이블  예: grid-def456
+  token:       'fb384521-f69a-490e-a18d-c391fbda4bf6',  // ← 여기에 토큰 입력
+  docId:       'dHDLpF1wXy7',
+  tableLesson: 'grid-KeppF18tMK',
+  tableWrong:  'grid-EEGH_REJba',
 };
 
 // ── Coda API 헬퍼 ──
+// ✅ 수정사항:
+//   1) keyColumns 방식 사용 → 컬럼 이름으로 안정적 매핑
+//   2) 에러 응답 본문을 콘솔에 출력해 디버깅 가능
+//   3) fetchCompleted: valueFormat=simpleWithArrays 로 값 파싱 안정화
 const CodaAPI = {
-  base()  { return `https://coda.io/apis/v1/docs/${CODA_CONFIG.docId}`; },
-  hdrs()  { return { 'Authorization': `Bearer ${CODA_CONFIG.token}`, 'Content-Type': 'application/json' }; },
+  BASE: `https://coda.io/apis/v1/docs/dHDLpF1wXy7`,
+  hdrs() {
+    return {
+      'Authorization': `Bearer ${CODA_CONFIG.token}`,
+      'Content-Type': 'application/json',
+    };
+  },
   ready() { return !CODA_CONFIG.token.startsWith('YOUR_'); },
 
-  async addRow(tableId, cells) {
-    if (!this.ready()) return;
+  // 행 추가 — keyColumns 방식: 컬럼 이름을 키로 직접 전달
+  async addRow(tableId, rowObj) {
+    if (!this.ready()) { console.warn('Coda API 토큰 미설정'); return; }
+    const cells = Object.entries(rowObj).map(([col, val]) => ({ column: col, value: val }));
+    const url = `${this.BASE}/tables/${tableId}/rows`;
+    updateSyncStatus('syncing');
     try {
-      await fetch(`${this.base()}/tables/${tableId}/rows`, {
-        method:'POST', headers:this.hdrs(),
-        body: JSON.stringify({ rows:[{ cells }] })
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: this.hdrs(),
+        body: JSON.stringify({ rows: [{ cells }] }),
       });
-    } catch(e) { console.warn('Coda addRow error:', e); }
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error(`Coda API ${res.status}:`, errText);
+        updateSyncStatus('error');
+      } else {
+        console.log('✅ Coda 기록 성공:', tableId);
+        updateSyncStatus('ok');
+      }
+    } catch(e) {
+      console.error('Coda fetch 실패 — CORS 차단. 파일을 서버에서 열어주세요.', e.message);
+      updateSyncStatus('error');
+    }
   },
 
   async logLesson(userName, lesson, unitName, earnedXP) {
-    await this.addRow(CODA_CONFIG.tableLesson, [
-      { column:'Name',        value: userName },
-      { column:'LessonId',    value: lesson.id },
-      { column:'LessonTitle', value: lesson.title },
-      { column:'UnitName',    value: unitName },
-      { column:'XP',          value: earnedXP },
-      { column:'CompletedAt', value: new Date().toISOString() },
-    ]);
+    await this.addRow(CODA_CONFIG.tableLesson, {
+      'Name':        userName,
+      'LessonId':    lesson.id,
+      'LessonTitle': lesson.title,
+      'UnitName':    unitName,
+      'XP':          earnedXP,
+      'CompletedAt': new Date().toISOString(),
+    });
   },
 
   async logWrong(userName, unitName, lessonTitle, question, wrongAns, correctAns) {
-    await this.addRow(CODA_CONFIG.tableWrong, [
-      { column:'Name',          value: userName },
-      { column:'UnitName',      value: unitName },
-      { column:'LessonTitle',   value: lessonTitle },
-      { column:'Question',      value: question },
-      { column:'WrongAnswer',   value: wrongAns },
-      { column:'CorrectAnswer', value: correctAns },
-      { column:'LoggedAt',      value: new Date().toISOString() },
-    ]);
+    await this.addRow(CODA_CONFIG.tableWrong, {
+      'Name':          userName,
+      'UnitName':      unitName,
+      'LessonTitle':   lessonTitle,
+      'Question':      question,
+      'WrongAnswer':   wrongAns,
+      'CorrectAnswer': correctAns,
+      'LoggedAt':      new Date().toISOString(),
+    });
   },
 
-  // 기존 완료 레슨 복원
+  // 기존 완료 레슨 복원 — valueFormat=simpleWithArrays 로 값을 단순 문자열로 받기
   async fetchCompleted(userName) {
     if (!this.ready()) return [];
     try {
-      const url = `${this.base()}/tables/${CODA_CONFIG.tableLesson}/rows?limit=500`;
+      const url = `${this.BASE}/tables/${CODA_CONFIG.tableLesson}/rows?valueFormat=simpleWithArrays&limit=500`;
       const res = await fetch(url, { headers: this.hdrs() });
+      if (!res.ok) { console.error('fetchCompleted 실패:', res.status); return []; }
       const data = await res.json();
       const rows = data.items || [];
+      // values는 { "Name":"홍팀장", "LessonId":"f1", ... } 형태
       return rows
-        .filter(r => {
-          const vals = Object.values(r.values || {});
-          return vals.some(v => String(v) === userName);
-        })
-        .map(r => {
-          const vals = r.values || {};
-          for (const [k,v] of Object.entries(vals)) {
-            if (k === 'LessonId' || k.toLowerCase().includes('lessonid')) return String(v);
-          }
-          return null;
-        }).filter(Boolean);
-    } catch(e) { console.warn('Coda fetch error:', e); return []; }
+        .filter(r => r.values && String(r.values['Name']) === userName)
+        .map(r => String(r.values['LessonId'] || ''))
+        .filter(Boolean);
+    } catch(e) {
+      console.error('fetchCompleted 오류:', e.message);
+      return [];
+    }
+  },
+
+  // 연동 테스트 — 브라우저 콘솔에서 CodaAPI.test() 실행해서 확인 가능
+  async test() {
+    console.log('=== Coda API 연동 테스트 ===');
+    console.log('token ready:', this.ready());
+    const url = `${this.BASE}/tables/${CODA_CONFIG.tableLesson}/rows?limit=1`;
+    try {
+      const res = await fetch(url, { headers: this.hdrs() });
+      const data = await res.json();
+      if (res.ok) {
+        console.log('✅ API 연결 성공! 컬럼 목록:', Object.keys(data.items?.[0]?.values || {}));
+      } else {
+        console.error('❌ API 오류:', res.status, data);
+      }
+    } catch(e) {
+      console.error('❌ 네트워크 오류 (CORS):', e.message);
+      console.warn('👉 파일을 로컬(file://)이 아닌 서버(http://)에서 열어야 해요.');
+    }
   }
 };
 
@@ -1231,16 +1272,57 @@ function refreshStatUI(){
   document.getElementById('statDone').textContent=completedCount;
   document.getElementById('statAcc').textContent=totalAns>0?Math.round(correctAns/totalAns*100)+'%':'—';
   document.getElementById('statWrong').textContent=wrongLog.length;
-  // 코다 API 연동 상태 표시
+  updateSyncStatus();
+}
+
+function updateSyncStatus(state){
   const sb=document.getElementById('syncStatusBox');
-  if(sb){
-    if(CodaAPI.ready()){
-      sb.innerHTML='<span style="color:var(--green-dark);">☁️ 코다 동기화 활성화</span>';
-      sb.style.background='var(--green-light)';
-    } else {
-      sb.innerHTML='⚠️ 로컬 저장 중 <span style="font-weight:400;">(API 미설정)</span>';
-    }
+  if(!sb) return;
+  if(!CodaAPI.ready()){
+    sb.style.background='var(--yellow-light)';
+    sb.style.border='1px solid var(--yellow)';
+    sb.innerHTML='⚠️ 토큰 미입력 — 로컬 저장만';
+    return;
   }
+  const isLocal = location.protocol === 'file:';
+  if(isLocal){
+    sb.style.background='#fff3e0'; sb.style.border='1px solid var(--orange)';
+    sb.innerHTML=`<span style="color:var(--orange);cursor:pointer;" onclick="showCorsGuide()">
+      ⚠️ CORS 차단됨 — 해결방법 보기
+    </span>`;
+    return;
+  }
+  if(state==='syncing'){
+    sb.style.background='var(--blue-light)'; sb.style.border='1px solid var(--blue)';
+    sb.innerHTML='<span style="color:var(--blue-dark);">⏫ 코다에 저장 중...</span>';
+  } else if(state==='ok'){
+    sb.style.background='var(--green-light)'; sb.style.border='1px solid var(--green)';
+    sb.innerHTML='<span style="color:var(--green-dark);">✅ 코다 저장 완료</span>';
+    setTimeout(()=>updateSyncStatus('ready'), 2000);
+  } else if(state==='error'){
+    sb.style.background='var(--red-light)'; sb.style.border='1px solid var(--red)';
+    sb.innerHTML='<span style="color:var(--red);">❌ 저장 실패 — 콘솔(F12) 확인</span>';
+  } else {
+    sb.style.background='var(--green-light)'; sb.style.border='1px solid var(--green)';
+    sb.innerHTML='<span style="color:var(--green-dark);">☁️ 코다 동기화 활성</span>';
+  }
+}
+
+function showCorsGuide(){
+  alert(
+    '📌 CORS 오류 해결 방법\n\n' +
+    'HTML 파일을 직접 열면(file://) 브라우저가\n' +
+    '보안 정책으로 외부 API 호출을 차단해요.\n\n' +
+    '✅ 해결 방법 (하나만 선택):\n\n' +
+    '① VS Code Live Server 확장 설치\n' +
+    '   → 파일 우클릭 → Open with Live Server\n\n' +
+    '② GitHub Pages 무료 호스팅\n' +
+    '   → github.com → 새 저장소 → 파일 업로드\n' +
+    '   → Settings → Pages → main branch 선택\n\n' +
+    '③ 로컬 서버 (터미널)\n' +
+    '   → python3 -m http.server 8080\n' +
+    '   → http://localhost:8080 으로 접속'
+  );
 }
 
 function updateStars(){

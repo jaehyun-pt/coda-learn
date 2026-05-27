@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>코다 배우기 🦉</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- Firebase 제거됨: Coda API 방식으로 대체 -->
+
 <style>
 :root{
   --green:#58cc02;--green-dark:#46a302;--green-light:#d7ffb8;
@@ -200,7 +200,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
     <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:26px;margin-bottom:8px;">코다런에 오신 것을 환영해요!</div>
     <p style="font-size:14px;color:var(--gray-500);line-height:1.6;margin-bottom:28px;">이름을 입력하면 학습 기록이 저장되고<br>다른 기기에서도 이어서 학습할 수 있어요.</p>
     <!-- 이름 입력 -->
-    <input id="nameInput" type="text" placeholder="이름을 입력하세요 (예: 김밀당)"
+    <input id="nameInput" type="text" placeholder="이름을 입력하세요 (예: 김팀장)"
       style="width:100%;padding:14px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;
              border:2px solid var(--gray-200);border-radius:var(--radius-sm);outline:none;margin-bottom:10px;
              transition:border-color .15s;"
@@ -223,7 +223,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
     <div class="xp-label">⚡ <span id="xpVal">0</span> XP</div>
     <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
   </div>
-  <div class="streak-badge">🔥 <span id="streakVal">1</span>일 연속</div>
   <!-- 로그인 후 표시되는 유저 칩 -->
   <div id="topUserChip" style="display:none;align-items:center;gap:8px;margin-left:12px;flex-shrink:0;">
     <div style="width:8px;height:8px;background:var(--green);border-radius:50%;"></div>
@@ -259,12 +258,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
           <div class="stat-lbl">❌ 오답 — 클릭해서 복습</div>
         </div>
         <div id="syncStatusBox" style="grid-column:1/-1;background:var(--gray-100);border-radius:var(--radius-sm);padding:8px 10px;text-align:center;font-size:11px;color:var(--gray-500);font-weight:600;"></div>
-        <button onclick="document.getElementById('diagPanel').style.display='flex'"
-          style="grid-column:1/-1;background:none;border:1px dashed var(--gray-300);border-radius:var(--radius-sm);padding:6px;font-size:11px;color:var(--gray-400);cursor:pointer;font-weight:600;transition:all .15s;"
-          onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'"
-          onmouseout="this.style.borderColor='var(--gray-300)';this.style.color='var(--gray-400)'">
-          🔧 API 연동 진단
-        </button>
       </div>
     </div>
   </aside>
@@ -299,38 +292,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
   </div>
 </div>
 
-<!-- DIAGNOSTIC PANEL -->
-<div id="diagPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#1e1e1e;color:#d4d4d4;border-radius:16px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;padding:28px;font-family:'Courier New',monospace;font-size:13px;line-height:1.7;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <span style="color:#4fc1ff;font-weight:700;font-size:15px;">🔧 API 연동 진단</span>
-      <button onclick="document.getElementById('diagPanel').style.display='none'"
-        style="background:#333;border:none;color:#ccc;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:13px;">✕ 닫기</button>
-    </div>
-
-    <div style="margin-bottom:16px;">
-      <label style="color:#9cdcfe;font-size:12px;">🔑 API 토큰 입력</label><br>
-      <input id="diagToken" type="password" placeholder="토큰을 여기에 입력하세요"
-        style="width:100%;margin-top:6px;padding:8px 12px;background:#2d2d2d;border:1px solid #555;border-radius:6px;color:#fff;font-family:'Courier New',monospace;font-size:13px;outline:none;" />
-    </div>
-
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-      <button onclick="diagTest()" style="background:#0e7490;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;">① API 연결 테스트</button>
-      <button onclick="diagGetCols('lesson')" style="background:#166534;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;">② 학습기록 컬럼 확인</button>
-      <button onclick="diagGetCols('wrong')" style="background:#7c2d12;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;">③ 오답기록 컬럼 확인</button>
-      <button onclick="diagSendTest()" style="background:#4a1d96;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;">④ 테스트 행 추가</button>
-    </div>
-
-    <div id="diagLog" style="background:#111;border-radius:8px;padding:14px;min-height:80px;white-space:pre-wrap;color:#a8ff78;font-size:12px;">
-// 위 버튼을 순서대로 눌러서 문제를 찾아보세요
-    </div>
-
-    <div style="margin-top:16px;padding:12px;background:#2d2d2d;border-radius:8px;font-size:11px;color:#aaa;line-height:1.6;">
-      ⓘ 토큰은 이 진단 창에서만 임시로 사용되며 저장되지 않아요.<br>
-      ⓘ "① API 연결 테스트"가 성공하면 토큰을 HTML 파일에 붙여넣고 저장하세요.
-    </div>
-  </div>
-</div>
 
 <!-- REVIEW MODAL -->
 <div class="modal-overlay" id="reviewOverlay" onclick="if(event.target===this)closeReviewModal()">
@@ -355,11 +316,7 @@ const CODA_CONFIG = {
   tableWrong:  'grid-EEGH_REJba',
 };
 
-// ── Coda API 헬퍼 ──
-// ✅ 수정사항:
-//   1) keyColumns 방식 사용 → 컬럼 이름으로 안정적 매핑
-//   2) 에러 응답 본문을 콘솔에 출력해 디버깅 가능
-//   3) fetchCompleted: valueFormat=simpleWithArrays 로 값 파싱 안정화
+// ── Coda API ──
 const CodaAPI = {
   BASE: `https://coda.io/apis/v1/docs/_dHDLpF1wXy7`,
   hdrs() {
@@ -372,45 +329,17 @@ const CodaAPI = {
 
   // 행 추가
   async addRow(tableId, rowObj) {
-    if (!this.ready()) {
-      console.warn('[Coda] 토큰 미설정 — CODA_CONFIG.token 을 확인하세요');
-      return;
-    }
+    if (!this.ready()) return;
     const cells = Object.entries(rowObj).map(([col, val]) => ({ column: col, value: val }));
-    const url = `${this.BASE}/tables/${tableId}/rows`;
-    console.log('[Coda] POST →', url);
-    console.log('[Coda] payload →', JSON.stringify({ rows: [{ cells }] }));
     updateSyncStatus('syncing');
     try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: this.hdrs(),
+      const res = await fetch(`${this.BASE}/tables/${tableId}/rows`, {
+        method: 'POST', headers: this.hdrs(),
         body: JSON.stringify({ rows: [{ cells }] }),
       });
-      const resText = await res.text();
-      console.log('[Coda] 응답 status:', res.status);
-      console.log('[Coda] 응답 body:', resText);
-      if (!res.ok) {
-        updateSyncStatus('error');
-        // 원인별 안내
-        let hint = '';
-        try {
-          const j = JSON.parse(resText);
-          if (res.status === 404) hint = '→ docId 또는 tableId가 잘못됐어요. URL을 다시 확인하세요.';
-          if (res.status === 401) hint = '→ 토큰이 만료됐거나 잘못됐어요. API 토큰을 다시 발급해주세요.';
-          if (res.status === 403) hint = '→ 이 문서에 대한 API 접근 권한이 없어요.';
-          if (j.message && j.message.toLowerCase().includes('column')) hint = '→ 컬럼명이 코다 테이블과 다르게 입력됐어요.';
-        } catch(e2){}
-        console.error('[Coda] ❌ 오류:', res.status, hint);
-      } else {
-        console.log('[Coda] ✅ 저장 성공!');
-        updateSyncStatus('ok');
-      }
-    } catch(e) {
-      console.error('[Coda] ❌ fetch 자체 실패 — CORS 또는 네트워크 오류:', e.message);
-      console.warn('[Coda] → 파일을 file:// 이 아닌 http:// 서버에서 열어주세요.');
-      updateSyncStatus('error');
-    }
+      if (res.ok) { updateSyncStatus('ok'); }
+      else { const e=await res.json().catch(()=>({})); console.error('Coda',res.status,e.message||''); updateSyncStatus('error'); }
+    } catch(e) { console.error('Coda fetch error:',e.message); updateSyncStatus('error'); }
   },
 
   async logLesson(userName, lesson, unitName, earnedXP) {
@@ -436,7 +365,7 @@ const CodaAPI = {
     });
   },
 
-  // 기존 완료 레슨 복원 — valueFormat=simpleWithArrays 로 값을 단순 문자열로 받기
+  // 완료 레슨 복원
   async fetchCompleted(userName) {
     if (!this.ready()) return [];
     try {
@@ -1280,51 +1209,11 @@ function refreshStatUI(){
 function updateSyncStatus(state){
   const sb=document.getElementById('syncStatusBox');
   if(!sb) return;
-  if(!CodaAPI.ready()){
-    sb.style.background='var(--yellow-light)';
-    sb.style.border='1px solid var(--yellow)';
-    sb.innerHTML='⚠️ 토큰 미입력 — 로컬 저장만';
-    return;
-  }
-  const isLocal = location.protocol === 'file:';
-  if(isLocal){
-    sb.style.background='#fff3e0'; sb.style.border='1px solid var(--orange)';
-    sb.innerHTML=`<span style="color:var(--orange);cursor:pointer;" onclick="showCorsGuide()">
-      ⚠️ CORS 차단됨 — 해결방법 보기
-    </span>`;
-    return;
-  }
-  if(state==='syncing'){
-    sb.style.background='var(--blue-light)'; sb.style.border='1px solid var(--blue)';
-    sb.innerHTML='<span style="color:var(--blue-dark);">⏫ 코다에 저장 중...</span>';
-  } else if(state==='ok'){
-    sb.style.background='var(--green-light)'; sb.style.border='1px solid var(--green)';
-    sb.innerHTML='<span style="color:var(--green-dark);">✅ 코다 저장 완료</span>';
-    setTimeout(()=>updateSyncStatus('ready'), 2000);
-  } else if(state==='error'){
-    sb.style.background='var(--red-light)'; sb.style.border='1px solid var(--red)';
-    sb.innerHTML='<span style="color:var(--red);">❌ 저장 실패 — 콘솔(F12) 확인</span>';
-  } else {
-    sb.style.background='var(--green-light)'; sb.style.border='1px solid var(--green)';
-    sb.innerHTML='<span style="color:var(--green-dark);">☁️ 코다 동기화 활성</span>';
-  }
-}
-
-function showCorsGuide(){
-  alert(
-    '📌 CORS 오류 해결 방법\n\n' +
-    'HTML 파일을 직접 열면(file://) 브라우저가\n' +
-    '보안 정책으로 외부 API 호출을 차단해요.\n\n' +
-    '✅ 해결 방법 (하나만 선택):\n\n' +
-    '① VS Code Live Server 확장 설치\n' +
-    '   → 파일 우클릭 → Open with Live Server\n\n' +
-    '② GitHub Pages 무료 호스팅\n' +
-    '   → github.com → 새 저장소 → 파일 업로드\n' +
-    '   → Settings → Pages → main branch 선택\n\n' +
-    '③ 로컬 서버 (터미널)\n' +
-    '   → python3 -m http.server 8080\n' +
-    '   → http://localhost:8080 으로 접속'
-  );
+  if(!CodaAPI.ready()){ sb.textContent='⚠️ 토큰 미설정'; return; }
+  if(state==='syncing') sb.textContent='⏫ 저장 중...';
+  else if(state==='ok'){ sb.textContent='✅ 저장 완료'; setTimeout(()=>updateSyncStatus('ready'),2000); }
+  else if(state==='error') sb.textContent='❌ 저장 실패';
+  else sb.textContent='☁️ 코다 연동 활성';
 }
 
 function updateStars(){
@@ -1380,102 +1269,6 @@ function clearWrongLog(){
 // ═══════════════════════════════════════════════
 // 진단 패널 함수
 // ═══════════════════════════════════════════════
-function diagLog(msg, color='#a8ff78'){
-  const el=document.getElementById('diagLog');
-  if(!el) return;
-  const time=new Date().toLocaleTimeString();
-  el.innerHTML += `<span style="color:#666;">[${time}]</span> <span style="color:${color};">${msg}</span>
-`;
-  el.scrollTop=el.scrollHeight;
-}
-function diagClear(){ const el=document.getElementById('diagLog'); if(el) el.textContent=''; }
-
-function _diagToken(){
-  const t=document.getElementById('diagToken')?.value.trim() || CODA_CONFIG.token;
-  if(!t||t.length<10){ diagLog('❌ 토큰을 위 입력창에 먼저 붙여넣어 주세요.','#ff6b6b'); return null; }
-  return t;
-}
-
-async function diagTest(){
-  diagClear();
-  const token=_diagToken(); if(!token) return;
-  diagLog('API 연결 테스트 중...','#79c0ff');
-  const url=`https://coda.io/apis/v1/docs/${CODA_CONFIG.docId}`;
-  try{
-    const res=await fetch(url,{headers:{'Authorization':`Bearer ${token}`}});
-    const data=await res.json();
-    if(res.ok){
-      diagLog(`✅ 문서 연결 성공! 문서명: "${data.name}"`,'#a8ff78');
-      diagLog('→ 다음: ② 학습기록 컬럼 확인 버튼을 눌러보세요','#ffd166');
-    } else {
-      diagLog(`❌ ${res.status}: ${data.message}`,'#ff6b6b');
-      if(res.status===401) diagLog('→ 토큰이 잘못됐어요. 코다에서 다시 복사해주세요.','#ffd166');
-      if(res.status===404) diagLog('→ docId가 잘못됐어요. URL을 다시 확인해주세요.','#ffd166');
-    }
-  }catch(e){ diagLog(`❌ 네트워크 오류: ${e.message}`,'#ff6b6b'); }
-}
-
-async function diagGetCols(which){
-  diagClear();
-  const token=_diagToken(); if(!token) return;
-  const tableId=which==='lesson'?CODA_CONFIG.tableLesson:CODA_CONFIG.tableWrong;
-  const tableName=which==='lesson'?'학습기록':'오답기록';
-  diagLog(`${tableName} 테이블 컬럼 조회 중...`,'#79c0ff');
-  try{
-    const res=await fetch(
-      `https://coda.io/apis/v1/docs/${CODA_CONFIG.docId}/tables/${tableId}/columns`,
-      {headers:{'Authorization':`Bearer ${token}`}}
-    );
-    const data=await res.json();
-    if(res.ok){
-      const cols=(data.items||[]).map(c=>`  • ${c.name} (id: ${c.id})`).join('
-');
-      diagLog(`✅ 컬럼 ${data.items.length}개 발견:
-${cols}`,'#a8ff78');
-      diagLog('→ 위 컬럼명이 아래 목록과 일치하는지 확인하세요:','#ffd166');
-      if(which==='lesson')
-        diagLog('  Name, LessonId, LessonTitle, UnitName, XP, CompletedAt','#ce82ff');
-      else
-        diagLog('  Name, UnitName, LessonTitle, Question, WrongAnswer, CorrectAnswer, LoggedAt','#ce82ff');
-    } else {
-      diagLog(`❌ ${res.status}: ${data.message}`,'#ff6b6b');
-    }
-  }catch(e){ diagLog(`❌ 오류: ${e.message}`,'#ff6b6b'); }
-}
-
-async function diagSendTest(){
-  diagClear();
-  const token=_diagToken(); if(!token) return;
-  diagLog('테스트 행 추가 중...','#79c0ff');
-  const cells=[
-    {column:'Name',value:'테스트'},
-    {column:'LessonId',value:'test-001'},
-    {column:'LessonTitle',value:'진단 테스트'},
-    {column:'UnitName',value:'진단'},
-    {column:'XP',value:0},
-    {column:'CompletedAt',value:new Date().toISOString()},
-  ];
-  try{
-    const res=await fetch(
-      `https://coda.io/apis/v1/docs/${CODA_CONFIG.docId}/tables/${CODA_CONFIG.tableLesson}/rows`,
-      {method:'POST',headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},
-       body:JSON.stringify({rows:[{cells}]})}
-    );
-    const data=await res.json();
-    if(res.ok){
-      diagLog('✅ 행 추가 성공! 코다 테이블에서 "테스트" 행을 확인하세요.','#a8ff78');
-      diagLog('→ 성공했다면 위 토큰을 로그인 화면의 토큰 입력창에 넣고 재시작하세요!','#ffd166');
-      // 토큰 저장
-      localStorage.setItem('coda_token', token);
-      diagLog('→ 토큰이 이 기기에 저장됐어요. 다음 로그인부터 자동 적용!','#a8ff78');
-    } else {
-      diagLog(`❌ ${res.status}: ${JSON.stringify(data)}`,'#ff6b6b');
-      if(data.message && data.message.includes('column')){
-        diagLog('→ 컬럼명이 맞지 않아요. ② 학습기록 컬럼 확인으로 실제 컬럼명을 먼저 확인하세요.','#ffd166');
-      }
-    }
-  }catch(e){ diagLog(`❌ 오류: ${e.message}`,'#ff6b6b'); }
-}
 
 </script>
 </body>

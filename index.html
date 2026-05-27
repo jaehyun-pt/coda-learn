@@ -201,14 +201,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
     <p style="font-size:14px;color:var(--gray-500);line-height:1.6;margin-bottom:28px;">이름을 입력하면 학습 기록이 저장되고<br>다른 기기에서도 이어서 학습할 수 있어요.</p>
     <!-- 이름 입력 -->
     <input id="nameInput" type="text" placeholder="이름을 입력하세요 (예: 김팀장)"
-      onkeydown="handleNameKey(event)"
       style="width:100%;padding:14px 16px;font-size:15px;font-family:'Noto Sans KR',sans-serif;
              border:2px solid var(--gray-200);border-radius:var(--radius-sm);outline:none;margin-bottom:10px;
              transition:border-color .15s;"
-      onfocus="this.style.borderColor='var(--blue)'"
     />
 
-    <button id="loginBtn" onclick="submitLogin()"
+    <button id="loginBtn"
       style="width:100%;padding:14px;background:var(--green);color:white;border:none;border-bottom:3px solid var(--green-dark);
              border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;">
       시작하기 →
@@ -927,6 +925,16 @@ function logout(){
 // INIT — DOM 완전히 로드된 후 실행
 // ═══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', function(){
+  // 로그인 이벤트 연결
+  document.getElementById('loginBtn').addEventListener('click', submitLogin);
+  document.getElementById('nameInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') submitLogin();
+  });
+  document.getElementById('nameInput').addEventListener('focus', function(){
+    this.style.borderColor = 'var(--blue)';
+  });
+
+  // 세션 복원
   const _hasSession = loadState();
   if(_hasSession && currentUserName){
     hideLoginWall();
@@ -1469,12 +1477,6 @@ async function diagSendTest(){
   }catch(e){ diagLog(`❌ 오류: ${e.message}`,'#ff6b6b'); }
 }
 
-// ── INIT RENDER ──
-if(_hasSession && currentUserName){
-  refreshStatUI();
-  updateStars();
-  renderUnit();
-}
 </script>
 </body>
 </html>

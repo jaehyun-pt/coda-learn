@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>코다 배우기 🦉</title>
+<title>코다 배우기 🐣</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -308,102 +308,79 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--gray
 // ═══════════════════════════════════════════════
 // ⚙️  CODA API 설정  ← 이 세 값만 교체하면 연동 완료
 // ═══════════════════════════════════════════════
-// ⚙️ 관리자 설정값 — 토큰만 교체하면 됩니다
-const CODA_CONFIG = {
-  token:       'fb384521-f69a-490e-a18d-c391fbda4bf6',  // ← 여기에 토큰 붙여넣기
-  docId:       'dHDLpF1wXy7',
-  tableLesson: 'tuF18tMK',
-  tableWrong:  'tu_REJba',
+// ⚙️ n8n Webhook URL 설정 — 3개만 교체하면 됩니다
+// n8n 클라우드 → 각 워크플로우 → Webhook 노드 → URL 복사
+const N8N = {
+  saveLesson:  'https://ontact.app.n8n.cloud/webhook/save-lesson',   // 워크플로우 ① URL
+  saveWrong:   'https://ontact.app.n8n.cloud/webhook/save-wrong',    // 워크플로우 ② URL
+  getProgress: 'https://ontact.app.n8n.cloud/webhook/get-progress',  // 워크플로우 ③ URL
 };
 
-// ── Coda API ──
+// ── API 헬퍼 ──
 const CodaAPI = {
-  BASE: `https://coda.io/apis/v1/docs/dHDLpF1wXy7`,
-  hdrs() {
-    return {
-      'Authorization': `Bearer ${CODA_CONFIG.token}`,
-      'Content-Type': 'application/json',
-    };
+  ready() {
+    return true; // Webhook URL 설정 완료
   },
-  ready() { return !CODA_CONFIG.token.startsWith('YOUR_'); },
 
-  // 행 추가
-  async addRow(tableId, rowObj) {
-    if (!this.ready()) return;
-    const cells = Object.entries(rowObj).map(([col, val]) => ({ column: col, value: val }));
-    updateSyncStatus('syncing');
+  // 내부 공통 POST 호출
+  async _post(url, body) {
     try {
-      const res = await fetch(`${this.BASE}/tables/${tableId}/rows`, {
-        method: 'POST', headers: this.hdrs(),
-        body: JSON.stringify({ rows: [{ cells }] }),
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       });
       if (res.ok) { updateSyncStatus('ok'); }
-      else { const e=await res.json().catch(()=>({})); console.error('Coda',res.status,e.message||''); updateSyncStatus('error'); }
-    } catch(e) { console.error('Coda fetch error:',e.message); updateSyncStatus('error'); }
+      else        { console.error('n8n error', res.status); updateSyncStatus('error'); }
+    } catch(e) {
+      console.error('n8n fetch error:', e.message);
+      updateSyncStatus('error');
+    }
   },
 
-  async logLesson(userName, lesson, unitName, earnedXP) {
-    await this.addRow(CODA_CONFIG.tableLesson, {
-      'Name':        userName,
-      'LessonId':    lesson.id,
-      'LessonTitle': lesson.title,
-      'UnitName':    unitName,
-      'XP':          earnedXP,
-      'CompletedAt': new Date().toISOString(),
+  // 학습기록 저장
+  logLesson(userName, lesson, unitName, earnedXP) {
+    if (!this.ready()) return;
+    updateSyncStatus('syncing');
+    this._post(N8N.saveLesson, {
+      Name:        userName,
+      LessonId:    lesson.id,
+      LessonTitle: lesson.title,
+      UnitName:    unitName,
+      XP:          earnedXP,
+      CompletedAt: new Date().toISOString(),
     });
   },
 
-  async logWrong(userName, unitName, lessonTitle, question, wrongAns, correctAns) {
-    await this.addRow(CODA_CONFIG.tableWrong, {
-      'Name':          userName,
-      'UnitName':      unitName,
-      'LessonTitle':   lessonTitle,
-      'Question':      question,
-      'WrongAnswer':   wrongAns,
-      'CorrectAnswer': correctAns,
-      'LoggedAt':      new Date().toISOString(),
+  // 오답기록 저장
+  logWrong(userName, unitName, lessonTitle, question, wrongAns, correctAns) {
+    if (!this.ready()) return;
+    updateSyncStatus('syncing');
+    this._post(N8N.saveWrong, {
+      Name:          userName,
+      UnitName:      unitName,
+      LessonTitle:   lessonTitle,
+      Question:      question,
+      WrongAnswer:   wrongAns,
+      CorrectAnswer: correctAns,
+      LoggedAt:      new Date().toISOString(),
     });
   },
 
-  // 완료 레슨 복원
+  // 진도 불러오기 (GET)
   async fetchCompleted(userName) {
     if (!this.ready()) return [];
     try {
-      const url = `${this.BASE}/tables/${CODA_CONFIG.tableLesson}/rows?valueFormat=simpleWithArrays&limit=500`;
-      const res = await fetch(url, { headers: this.hdrs() });
-      if (!res.ok) { console.error('fetchCompleted 실패:', res.status); return []; }
+      const res = await fetch(`${N8N.getProgress}?name=${encodeURIComponent(userName)}`);
+      if (!res.ok) return [];
       const data = await res.json();
-      const rows = data.items || [];
-      // values는 { "Name":"홍팀장", "LessonId":"f1", ... } 형태
-      return rows
-        .filter(r => r.values && String(r.values['Name']) === userName)
-        .map(r => String(r.values['LessonId'] || ''))
-        .filter(Boolean);
+      return data.lessonIds || [];
     } catch(e) {
-      console.error('fetchCompleted 오류:', e.message);
+      console.error('n8n fetchCompleted error:', e.message);
       return [];
     }
   },
-
-    // 연동 테스트 (콘솔 또는 진단 패널에서 호출)
-  async test() {
-    console.log('=== Coda API 연동 테스트 ===');
-    console.log('token ready:', this.ready(), '| token length:', CODA_CONFIG.token.length);
-    const url = `${this.BASE}/tables/${CODA_CONFIG.tableLesson}/rows?limit=1`;
-    try {
-      const res = await fetch(url, { headers: this.hdrs() });
-      const data = await res.json();
-      if (res.ok) {
-        console.log('✅ API 연결 성공! 컬럼:', Object.keys(data.items?.[0]?.values || {}));
-      } else {
-        console.error('❌ API 오류:', res.status, JSON.stringify(data));
-      }
-    } catch(e) {
-      console.error('❌ 네트워크 오류 (CORS):', e.message);
-    }
-  }
-};
-
+}
 // ═══════════════════════════════════════════════
 // STORAGE (localStorage — 기기 내 캐시)
 // ═══════════════════════════════════════════════
